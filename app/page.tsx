@@ -13,6 +13,13 @@ const animals = [
   { name: "레서판다", alias: "익숙해지면 매력 폭발하는", image: "/characters/red-panda.png", sealColor: "#8E3D2CB3" },
 ];
 
+const hanjaReadings: Record<string, string> = {
+  甲: "갑", 乙: "을", 丙: "병", 丁: "정", 戊: "무", 己: "기", 庚: "경", 辛: "신", 壬: "임", 癸: "계",
+  子: "자", 丑: "축", 寅: "인", 卯: "묘", 辰: "진", 巳: "사", 午: "오", 未: "미", 申: "신", 酉: "유", 戌: "술", 亥: "해",
+};
+
+const readPillar = (stem: string, branch: string) => `${hanjaReadings[stem]}${hanjaReadings[branch]}`;
+
 export default function Home() {
   const [started, setStarted] = useState(false);
   const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult } | null>(null);
@@ -93,7 +100,21 @@ export default function Home() {
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div className="result-copy"><p className="section-kicker">원국 계산 연결 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><div className="pillars" aria-label="계산된 사주 원국"><div><span>년주</span><b>{result.chart.pillars.year.stem}{result.chart.pillars.year.branch}</b></div><div><span>월주</span><b>{result.chart.pillars.month.stem}{result.chart.pillars.month.branch}</b></div><div><span>일주</span><b>{result.chart.pillars.day.stem}{result.chart.pillars.day.branch}</b></div><div><span>시주</span><b>{result.chart.pillars.hour ? `${result.chart.pillars.hour.stem}${result.chart.pillars.hour.branch}` : "시간 모름"}</b></div></div><p>네 기둥은 규칙 기반 계산기로 만들었어요.<br />마음속 꼬마동물은 일간 <b>{result.character.dayMaster}</b>의 특징인 ‘{result.character.basis}’을 아이 눈높이의 캐릭터 언어로 옮긴 결과예요.</p><small>계산 기준: 양력 · 한국 표준시 · 절입 기준 · 0시 일주 변경</small><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
+          <div className="result-copy">
+            <p className="section-kicker">{result.nickname}의 마음속 꼬마동물</p>
+            <h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3>
+            <div className="pillars" aria-label="계산된 사주 네 기둥">
+              <div><span>태어난 해 · 년주</span><b>{result.chart.pillars.year.stem}{result.chart.pillars.year.branch}</b><small>{readPillar(result.chart.pillars.year.stem, result.chart.pillars.year.branch)}</small><em>물려받은 바깥 배경</em></div>
+              <div><span>태어난 달 · 월주</span><b>{result.chart.pillars.month.stem}{result.chart.pillars.month.branch}</b><small>{readPillar(result.chart.pillars.month.stem, result.chart.pillars.month.branch)}</small><em>자라나는 계절과 환경</em></div>
+              <div><span>태어난 날 · 일주</span><b>{result.chart.pillars.day.stem}{result.chart.pillars.day.branch}</b><small>{readPillar(result.chart.pillars.day.stem, result.chart.pillars.day.branch)}</small><em>아이 자신을 보여주는 기둥</em></div>
+              <div><span>태어난 시간 · 시주</span><b>{result.chart.pillars.hour ? `${result.chart.pillars.hour.stem}${result.chart.pillars.hour.branch}` : "—"}</b><small>{result.chart.pillars.hour ? readPillar(result.chart.pillars.hour.stem, result.chart.pillars.hour.branch) : "시간 모름"}</small><em>마음속 관심과 가능성</em></div>
+            </div>
+            <p>{result.nickname} 자신을 나타내는 중심 글자는 <b>{result.character.dayMaster}({hanjaReadings[result.character.dayMaster]})</b>이에요.<br />‘{result.character.basis}’을 오늘왜그래에서는 {result.animal.name}로 표현했어요.</p>
+            <p className="character-disclaimer">꼬마동물은 사주에 원래 존재하는 분류가 아니라, 아이의 기질을 친근하게 이해하도록 만든 오늘왜그래만의 표현이에요.</p>
+            <details className="calculation-note"><summary>이 결과는 어떻게 나왔나요?</summary><p>양력 생년월일과 출생시간을 규칙 기반 만세력으로 계산했어요.<br />한국 표준시 · 절입 기준 · 0시 일주 변경 기준을 사용합니다.</p></details>
+            <div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div>
+            <small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}
+          </div>
         </article>}
       </section>}
 
