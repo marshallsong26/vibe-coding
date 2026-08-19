@@ -84,7 +84,23 @@ export default function Home() {
       </section>
 
       <section className="promise"><p className="section-kicker">OUR PROMISE</p><h2>아이를 정해진 운명에 가두지 않아요.</h2><p>오늘왜그래는 명리학을 아이를 이해하는 하나의 문화적 관점으로 사용합니다.<br />성격·진로·건강을 단정하지 않고, 부모의 실제 관찰과 아이의 성장 가능성을 가장 중요하게 생각해요.</p></section>
-      <footer><a className="logo" href="#top">오늘왜그래 <span>ㅎㅎ</span></a><p>오늘도 조금 더 아이를 이해했나요?</p><small>이 서비스는 의료·심리·교육 진단을 대신하지 않습니다.</small></footer>
+      <footer>
+        <a className="logo" href="#top">오늘왜그래 <span>ㅎㅎ</span></a><p>오늘도 조금 더 아이를 이해했나요?</p><small>이 서비스는 의료·심리·교육 진단을 대신하지 않습니다.</small>
+        <details className="privacy-policy">
+          <summary>개인정보 수집·이용 안내</summary>
+          <div>
+            <h3>아이의 정보는 필요한 만큼만 다뤄요.</h3>
+            <p><b>현재 데모에서는</b> 입력한 정보를 화면 결과를 보여주는 용도로만 사용하며 서버에 저장하지 않습니다.</p>
+            <dl>
+              <div><dt>최소 수집 항목</dt><dd>아이 애칭, 생년월일, 출생시간, 출생 도시</dd></div>
+              <div><dt>수집 목적</dt><dd>원국 계산과 마음속 꼬마동물·아이 이해 리포트 등 서비스 제공</dd></div>
+              <div><dt>보관 기간</dt><dd>저장 기능 도입 시 서비스 이용 기간 동안만 보관하며, 아이 정보 삭제 또는 서비스 이용 종료 시 지체 없이 삭제</dd></div>
+              <div><dt>별도 활용 없음</dt><dd>서비스 제공 외 광고·마케팅·제3자 제공 또는 AI 모델 학습 목적으로 수집하거나 활용하지 않음</dd></div>
+            </dl>
+            <p className="privacy-note">정식 저장 기능을 제공하기 전 수집 항목과 보유기간을 다시 안내하고 보호자의 별도 동의를 받습니다. 관계 법령에 따라 보존이 필요한 정보가 생기는 경우에는 해당 기간과 근거를 별도로 안내합니다.</p>
+          </div>
+        </details>
+      </footer>
     </main>
   );
 }
