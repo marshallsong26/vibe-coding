@@ -97,11 +97,21 @@ function ReasonPanel() { return <section className="report-panel"><p className="
   </div></section>; }
 
 function TodayPanel() {
-  const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(new Date());
+  const now = new Date();
+  const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(now);
   const messages = ["마음이 먼저 움직일 때까지 한 박자 기다려주면 좋은 날이에요.", "작은 선택권 하나가 아이의 자신감을 크게 깨워주는 날이에요.", "익숙한 놀이에 새로운 규칙 하나를 더하면 신이 나는 날이에요.", "말보다 몸을 먼저 움직이면 마음도 술술 따라오는 날이에요.", "시작보다 마무리를 함께 축하해주면 좋은 날이에요.", "천천히 순서를 정할수록 아이의 마음이 가벼워지는 날이에요.", "잘하려는 마음보다 재미있는 마음을 응원해주면 좋은 날이에요."];
-  return <section className="report-panel"><p className="report-label">매일 바뀌는 가벼운 보너스</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[new Date().getDay()]}</p></div><div className="daily-grid">
+  const colors = [
+    { name: "새싹 연두", hex: "#9EC244", play: "집 안에서 연두색 물건을 세 개 찾아보세요." },
+    { name: "햇살 노랑", hex: "#FFC038", play: "노란 물건을 찾아 오늘의 햇살 이름을 붙여보세요." },
+    { name: "구름 파랑", hex: "#6CBCE8", play: "파란색을 찾아 가장 시원한 파랑을 골라보세요." },
+    { name: "복숭아 분홍", hex: "#F798BD", play: "분홍색 물건 하나를 골라 다정한 별명을 붙여보세요." },
+    { name: "씩씩한 주황", hex: "#EE5426", play: "주황색을 발견할 때마다 힘나는 동작을 하나 해보세요." },
+  ];
+  const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+  const todayColor = colors[dayNumber % colors.length];
+  return <section className="report-panel"><p className="report-label">매일 바뀌는 가벼운 보너스</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
   <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
-  <article className="color-card"><span>오늘의 기분색</span><div className="color-dot" /><h4>새싹 연두</h4><p>집 안에서 연두색 물건을 세 개 찾아보세요.</p></article>
+  <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ background: todayColor.hex }} /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
   <article><span>오늘의 냠냠 작전</span><h4>바삭한 소리 탐정</h4><p>먹지 않아도 괜찮아요. 오늘 가장 재미있는 음식 소리를 함께 찾아봐요.</p></article>
   <article><span>잠들기 전 질문</span><h4>“오늘 네 마음속 호랑이는 언제 깨어났어?”</h4></article>
   </div></section>; }
