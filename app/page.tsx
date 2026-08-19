@@ -23,24 +23,17 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
   const [note, setNote] = useState("");
-  const [theme, setTheme] = useState<"pop" | "earth">("pop");
-
   return (
-    <main className={`theme-${theme}`}>
+    <main className="theme-earth">
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
         <nav aria-label="주요 메뉴">
           <a href="#sample">미리보기</a><a href="#how">이용 방법</a>
-          <div className="theme-switch" aria-label="컬러 팔레트 선택">
-            <button aria-pressed={theme === "pop"} onClick={() => setTheme("pop")}>팝 컬러</button>
-            <button aria-pressed={theme === "earth"} onClick={() => setTheme("earth")}>어스톤</button>
-          </div>
           <button className="nav-cta" onClick={() => setStarted(true)}>우리 아이 알아보기</button>
         </nav>
       </header>
 
       <section className="hero" id="top">
-        <div className="palette-caption"><b>{theme === "pop" ? "PALETTE 01" : "PALETTE 02"}</b><span>{theme === "pop" ? "밝고 경쾌한 팝 컬러" : "따뜻하고 아늑한 어스톤"}</span></div>
         <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
         <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
         <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
