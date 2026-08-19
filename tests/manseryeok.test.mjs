@@ -42,5 +42,12 @@ test("샘플의 경금 일간을 버전이 있는 호랑이 규칙으로 번역�
   const character = selectLittleAnimal(chart);
   assert.equal(character.dayMaster, "庚");
   assert.equal(character.animalName, "호랑이");
-  assert.equal(character.ruleSet, "LITTLE-ANIMAL-DAY-MASTER-v1");
+  assert.equal(character.ruleSet, "LITTLE-ANIMAL-DAY-MASTER-SEASON-v2");
+});
+
+test("일간과 월지 보조 규칙으로 열두 동물이 모두 도달 가능하다", () => {
+  const sample = calculateManseryeok(input("2025-01-01", "11:00"));
+  const cases = [["甲","寅"],["乙","卯"],["丙","寅"],["丁","寅"],["戊","寅"],["己","寅"],["庚","寅"],["辛","寅"],["壬","寅"],["癸","寅"],["甲","子"],["壬","子"]];
+  const animals = new Set(cases.map(([stem, branch]) => selectLittleAnimal({ ...sample, pillars: { ...sample.pillars, day: { ...sample.pillars.day, stem }, month: { ...sample.pillars.month, branch } } }).animalName));
+  assert.equal(animals.size, 12);
 });

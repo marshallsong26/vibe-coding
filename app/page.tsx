@@ -3,15 +3,24 @@
 import { FormEvent, useRef, useState } from "react";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
+import { animalProfiles } from "../lib/animal-profiles";
 
 const animals = [
-  { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png", sealColor: "#A36637B3" },
-  { name: "호랑이", alias: "준비운동만 벌써 세 번째인", image: "/characters/tiger.png", sealColor: "#EE5426B3" },
-  { name: "다람쥐", alias: "질문 주머니가 꽉 찬", image: "/characters/squirrel.png", sealColor: "#D99A09B3" },
-  { name: "아기 여우", alias: "조용하다 싶으면 실험 중인", image: "/characters/fox.png", sealColor: "#F06A9DB3" },
-  { name: "수달", alias: "신나는 건 내일까지 못 미루는", image: "/characters/otter.png", sealColor: "#368F8BB3" },
-  { name: "레서판다", alias: "익숙해지면 매력 폭발하는", image: "/characters/red-panda.png", sealColor: "#8E3D2CB3" },
+  { name: "카피바라", alias: animalProfiles.카피바라.alias, image: "/characters/capybara.png", sealColor: "#A36637B3" },
+  { name: "호랑이", alias: animalProfiles.호랑이.alias, image: "/characters/tiger.png", sealColor: "#EE5426B3" },
+  { name: "다람쥐", alias: animalProfiles.다람쥐.alias, image: "/characters/squirrel.png", sealColor: "#D99A09B3" },
+  { name: "아기 여우", alias: animalProfiles["아기 여우"].alias, image: "/characters/fox.png", sealColor: "#F06A9DB3" },
+  { name: "수달", alias: animalProfiles.수달.alias, image: "/characters/otter.png", sealColor: "#368F8BB3" },
+  { name: "레서판다", alias: animalProfiles.레서판다.alias, image: "/characters/red-panda.png", sealColor: "#8E3D2CB3" },
+  { name: "토끼", alias: animalProfiles.토끼.alias, emoji: "🐰", sealColor: "#F798BDB3" },
+  { name: "쿼카", alias: animalProfiles.쿼카.alias, emoji: "🐹", sealColor: "#FFC038B3" },
+  { name: "펭귄", alias: animalProfiles.펭귄.alias, emoji: "🐧", sealColor: "#387CAAB3" },
+  { name: "고슴도치", alias: animalProfiles.고슴도치.alias, emoji: "🦔", sealColor: "#A36637B3" },
+  { name: "미어캣", alias: animalProfiles.미어캣.alias, emoji: "🦫", sealColor: "#D99A09B3" },
+  { name: "고양이", alias: animalProfiles.고양이.alias, emoji: "🐈", sealColor: "#8E6AAEB3" },
 ];
+
+type ReportResult = { nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult };
 
 const hanjaReadings: Record<string, string> = {
   甲: "갑", 乙: "을", 丙: "병", 丁: "정", 戊: "무", 己: "기", 庚: "경", 辛: "신", 壬: "임", 癸: "계",
@@ -20,12 +29,27 @@ const hanjaReadings: Record<string, string> = {
 
 const readPillar = (stem: string, branch: string) => `${hanjaReadings[stem]}${hanjaReadings[branch]}`;
 
+const sampleChart = calculateManseryeok({ calendarType: "solar", birthDate: "2025-01-01", birthTime: "11:00", birthCity: "서울", timeZone: "Asia/Seoul" });
+const sampleCharacter = selectLittleAnimal(sampleChart);
+const sampleReport: ReportResult = { nickname: "별이", chart: sampleChart, character: sampleCharacter, animal: animals.find((animal) => animal.name === sampleCharacter.animalName)! };
+
+function formatBirth(result: ReportResult) {
+  const [year, month, day] = result.chart.input.birthDate.split("-").map(Number);
+  const time = result.chart.input.birthTime;
+  if (!time) return `${year}. ${month}. ${day} · 태어난 시간 모름 · ${result.chart.input.birthCity} 출생`;
+  const [hour, minute] = time.split(":").map(Number);
+  const period = hour < 12 ? "오전" : "오후";
+  const displayHour = hour % 12 || 12;
+  return `${year}. ${month}. ${day} · ${period} ${displayHour}:${String(minute).padStart(2, "0")} · ${result.chart.input.birthCity} 출생`;
+}
+
 export default function Home() {
   const [started, setStarted] = useState(false);
-  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult } | null>(null);
+  const [result, setResult] = useState<ReportResult | null>(null);
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
   const startRef = useRef<HTMLElement>(null);
+  const report = result ?? sampleReport;
 
   const openStart = () => {
     setStarted(true);
@@ -89,7 +113,7 @@ export default function Home() {
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
-        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
+        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />계산된 원국에 맞춰 아이만의 리포트가 바로 바뀌어요.</p></div>
         <form onSubmit={handleSubmit}>
           <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
           <label>양력 생년월일<input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
@@ -99,7 +123,7 @@ export default function Home() {
         </form>
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
-          <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
+          <div className="result-art">{"image" in result.animal ? <img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /> : <span className="animal-emoji" role="img" aria-label={`${result.animal.name} 캐릭터`}>{result.animal.emoji}</span>}</div>
           <div className="result-copy">
             <p className="section-kicker">{result.nickname}의 마음속 꼬마동물</p>
             <h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3>
@@ -129,10 +153,10 @@ export default function Home() {
 
       <section className="sample" id="sample">
         <div className="sample-paper">
-          <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2025. 1. 1 · 오전 11:00 · 서울 출생 · 샘플 결과</p></div>
+          <div className="section-heading"><p className="section-kicker">{result ? "MY LITTLE REPORT" : "SAMPLE REPORT"}</p><h2>{report.nickname}는 오늘 왜 그럴까?</h2><p>{formatBirth(report)}{result ? "" : " · 샘플 결과"}</p></div>
           <div className="report-shell">
             <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
-            <div className="report-flow"><div id="today-report"><TodayPanel /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div></div>
+            <div className="report-flow"><div id="today-report"><TodayPanel report={report} /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel report={report} /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel report={report} /></div></div>
           </div>
         </div>
       </section>
@@ -159,21 +183,25 @@ export default function Home() {
   );
 }
 
-function NaturePanel() { return <section className="report-panel">
-  <div className="character-card"><div className="character-face" style={{ backgroundColor: animals[1].sealColor }} aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 ‘마음속 꼬마동물’</p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
-  <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>푹 빠질 때의 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
+function NaturePanel({ report }: { report: ReportResult }) {
+  const profile = animalProfiles[report.character.animalName];
+  return <section className="report-panel">
+  <div className="character-card"><div className="character-face" style={{ backgroundColor: report.animal.sealColor }} aria-hidden="true"><span>{report.character.dayMaster}</span></div><div><p className="report-label">{report.nickname}의 ‘마음속 꼬마동물’</p><h3>{profile.alias}<br />{report.animal.name}</h3><p>{profile.intro}</p></div></div>
+  <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>{profile.strengths[0]}</h4><p>{report.nickname}에게 자연스럽게 먼저 드러나는 힘이에요.</p></article><article><span>푹 빠질 때의 강점</span><h4>{profile.strengths[1]}</h4><p>좋아하는 순간 더욱 선명해지는 힘이에요.</p></article><article><span>기억해 주세요</span><h4>{profile.strengths[2]}</h4><p>재촉보다 관찰할 때 자기답게 자라나는 힘이에요.</p></article></div>
   </section>; }
 
-function ReasonPanel() {
+function ReasonPanel({ report }: { report: ReportResult }) {
+  const profile = animalProfiles[report.character.animalName];
   const tapeColors = ["#f8bbd0", "#ffff00", "#d5ff00", "#33ff33", "#e9ec69"];
   const tapeColor = tapeColors[new Date().getDate() % tapeColors.length];
   return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
-  <article><b>“놀이터에 가서 왜 바로 안 놀지?”</b><p>낯선 상황의 사람과 규칙을 먼저 살펴보고 있을 수 있어요.<br />구경하는 시간도 별이에게는 참여의 일부예요.</p></article>
-  <article><b>“끝낼 시간이면 왜 갑자기 화를 내지?”</b><p>몰입한 마음이 현실의 전환 속도를 따라가지 못한 순간일 수 있어요.<br />끝나기 5분 전에 미리 알려주세요.</p></article>
-  <article className="survival"><span style={{ backgroundColor: tapeColor }}>부모의 생존 한마디</span><blockquote>“먼저 보고 있어도 괜찮아. 준비되면 네가 출발 신호를 알려줘.”</blockquote></article>
+  <article><b>“왜 바로 내 말대로 움직이지 않지?”</b><p>{profile.reason}<br />행동보다 아이의 준비 신호를 먼저 살펴봐주세요.</p></article>
+  <article><b>“왜 바뀌는 순간에 더 힘들어하지?”</b><p>{profile.transition}<br />작은 예고가 마음의 다리가 되어줘요.</p></article>
+  <article className="survival"><span style={{ backgroundColor: tapeColor }}>부모의 생존 한마디</span><blockquote>“{profile.survival}”</blockquote></article>
   </div></section>; }
 
-function TodayPanel() {
+function TodayPanel({ report }: { report: ReportResult }) {
+  const profile = animalProfiles[report.character.animalName];
   const now = new Date();
   const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(now);
   const messages = ["마음이 먼저 움직일 때까지 한 박자 기다려주면 좋은 날이에요.", "작은 선택권 하나가 아이의 자신감을 크게 깨워주는 날이에요.", "익숙한 놀이에 새로운 규칙 하나를 더하면 신이 나는 날이에요.", "말보다 몸을 먼저 움직이면 마음도 술술 따라오는 날이에요.", "시작보다 마무리를 함께 축하해주면 좋은 날이에요.", "천천히 순서를 정할수록 아이의 마음이 가벼워지는 날이에요.", "잘하려는 마음보다 재미있는 마음을 응원해주면 좋은 날이에요."];
@@ -187,8 +215,8 @@ function TodayPanel() {
   const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
   const todayColor = colors[dayNumber % colors.length];
   return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
-  <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
+  <article className="mission"><span>오늘의 작전</span><h4>{profile.mission}</h4><p>{profile.missionBody}</p><b>“{profile.survival}”</b></article>
   <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: todayColor.hex }} aria-hidden="true" /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
-  <article><span>오늘의 찰떡놀이</span><h4>내가 만드는 쿠션 길</h4><p className="play-reason">오늘은 직접 순서를 정할 때 마음이 더 잘 움직여요.</p><p>쿠션 세 개를 놓고 별이에게 출발점과 지나갈 순서를 직접 정하게 해주세요.</p></article>
-  <article><span>잠들기 전 질문해볼까요?</span><h4>“오늘 네 마음속 호랑이는 언제 깨어났어?”</h4><p className="prompt-reason">오늘 아이의 마음이 깨어난 순간을 편안하게 돌아보는 질문이에요.</p></article>
+  <article><span>오늘의 찰떡놀이</span><h4>{profile.play}</h4><p className="play-reason">{profile.playReason}</p><p>{profile.playBody}</p></article>
+  <article><span>잠들기 전 질문해볼까요?</span><h4>“{profile.bedtime}”</h4><p className="prompt-reason">오늘 {report.nickname}의 마음이 움직인 순간을 편안하게 돌아보는 질문이에요.</p></article>
   </div></section>; }
