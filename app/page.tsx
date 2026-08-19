@@ -1,13 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
-const reportTabs = [
-  { id: "nature", label: "원래왜그래" },
-  { id: "reason", label: "그래서그랬구나" },
-  { id: "today", label: "오늘왜그래" },
-  { id: "note", label: "오늘도그랬다" },
-];
+import { FormEvent, useRef, useState } from "react";
 
 const animals = [
   { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png" },
@@ -19,17 +12,30 @@ const animals = [
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("nature");
   const [started, setStarted] = useState(false);
-  const [reaction, setReaction] = useState<string | null>(null);
-  const [note, setNote] = useState("");
+  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number] } | null>(null);
+  const startRef = useRef<HTMLElement>(null);
+
+  const openStart = () => {
+    setStarted(true);
+    window.setTimeout(() => startRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const birthDate = String(data.get("birthDate") || "");
+    const seed = birthDate.replaceAll("-", "").split("").reduce((sum, number) => sum + Number(number), 0);
+    setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[seed % animals.length] });
+    window.setTimeout(() => document.querySelector("#animal-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
+  };
   return (
     <main className="theme-earth">
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
         <nav aria-label="주요 메뉴">
           <a href="#sample">미리보기</a><a href="#how">이용 방법</a>
-          <button className="nav-cta" onClick={() => setStarted(true)}>우리 아이 알아보기</button>
+          <button className="nav-cta" onClick={openStart}>우리 아이 알아보기</button>
         </nav>
       </header>
 
@@ -37,25 +43,23 @@ export default function Home() {
         <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
         <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
         <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
-        <div className="hero-actions"><button className="primary" onClick={() => setStarted(true)}>무료로 시작하기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
-        <div className="character-teaser">
-          <p>우리 집에는 어떤 작은 동물이 살고 있을까요?</p>
-          <div className="animal-strip" aria-label="아이 캐릭터 예시">{animals.map((animal, index) => <article key={animal.name} className={`animal a${index + 1}`}>
-            <img src={animal.image} alt={`${animal.alias} ${animal.name} 캐릭터`} />
-            <div><small>{animal.alias}</small><strong>{animal.name}</strong></div>
-          </article>)}</div>
-        </div>
+        <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
+        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이결 캐릭터와 리포트를 만날 수 있어요.</p>
       </section>
 
-      {started && <section className="start-panel" aria-label="아이 정보 입력">
-        <div><p className="section-kicker">START</p><h2>우리 아이는 왜 그럴까요?</h2><p>현재는 내용 검토용 화면입니다. 아이 정보는 저장하지 않아요.</p></div>
-        <form onSubmit={(event) => { event.preventDefault(); document.querySelector("#sample")?.scrollIntoView({ behavior: "smooth" }); }}>
-          <label>아이 애칭<input defaultValue="별이" aria-label="아이 애칭" /></label>
-          <label>생년월일<input type="date" defaultValue="2022-05-18" aria-label="생년월일" /></label>
-          <label>태어난 시간<input type="time" defaultValue="09:20" aria-label="태어난 시간" /></label>
-          <label>출생 도시<input defaultValue="서울" aria-label="출생 도시" /></label>
-          <button className="primary" type="submit">샘플 결과 보기</button>
+      {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
+        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요. 지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
+        <form onSubmit={handleSubmit}>
+          <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
+          <label>생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="생년월일" required /></label>
+          <label>태어난 시간<input name="birthTime" type="time" defaultValue="12:41" aria-label="태어난 시간" required /></label>
+          <label>출생 도시<input name="birthCity" defaultValue="서울" aria-label="출생 도시" required /></label>
+          <button className="primary" type="submit">우리 아이 동물 만나기</button>
         </form>
+        {result && <article className="animal-result" id="animal-result" aria-live="polite">
+          <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
+          <div><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요. 실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><a href="#sample">샘플 리포트 이어서 보기 ↓</a></div>
+        </article>}
       </section>}
 
       <section className="how" id="how">
@@ -68,16 +72,10 @@ export default function Home() {
       </section>
 
       <section className="sample" id="sample">
-        <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2022. 5. 18 · 오전 9:20 · 서울 출생 · 샘플 결과</p></div>
+        <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2024. 8. 30 · 오후 12:41 · 서울 출생 · 샘플 결과</p></div>
         <div className="report-shell">
-          <div className="report-tabs" role="tablist" aria-label="아이 리포트">{reportTabs.map((tab) => <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}>{tab.label}</button>)}</div>
-          {activeTab === "nature" && <NaturePanel />}{activeTab === "reason" && <ReasonPanel />}{activeTab === "today" && <TodayPanel />}
-          {activeTab === "note" && <section className="report-panel note-panel">
-            <p className="report-label">부모의 관찰 기록</p><h3>오늘도 그랬다</h3><p>사주 해석보다 실제로 관찰한 별이의 모습을 더 소중하게 쌓아가요.</p>
-            <div className="reaction-row" aria-label="오늘의 반응">{["아주 좋아했어요", "처음엔 망설였어요", "예상보다 집중했어요", "오늘은 관심 없어요"].map((item) => <button key={item} className={reaction === item ? "selected" : ""} onClick={() => setReaction(item)}>{item}</button>)}</div>
-            <label className="note-label">오늘의 한 줄<textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="예: 처음에는 안 한다더니 마지막까지 혼자 남아서 완성했다." /></label>
-            <button className="primary" onClick={() => setNote(note || "오늘 블록을 색깔보다 크기로 먼저 나누었다.")}>이 기기에 임시 기록하기</button>{note && <p className="saved-note">“{note}”</p>}
-          </section>}
+          <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#nature-report">01 원래왜그래</a><a href="#reason-report">02 그래서그랬구나</a><a href="#today-report">03 오늘왜그래</a></nav>
+          <div className="report-flow"><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>02</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div><div className="report-divider"><span>03</span><p>이해했다면, 오늘은 가볍게 이렇게</p></div><div id="today-report"><TodayPanel /></div></div>
         </div>
       </section>
 
