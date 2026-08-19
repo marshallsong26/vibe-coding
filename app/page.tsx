@@ -72,10 +72,12 @@ export default function Home() {
       </section>
 
       <section className="sample" id="sample">
-        <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2024. 8. 30 · 오후 12:41 · 서울 출생 · 샘플 결과</p></div>
-        <div className="report-shell">
-          <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
-          <div className="report-flow"><div id="today-report"><TodayPanel /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div></div>
+        <div className="sample-paper">
+          <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2024. 8. 30 · 오후 12:41 · 서울 출생 · 샘플 결과</p></div>
+          <div className="report-shell">
+            <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
+            <div className="report-flow"><div id="today-report"><TodayPanel /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div></div>
+          </div>
         </div>
       </section>
 
