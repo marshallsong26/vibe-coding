@@ -48,7 +48,7 @@ export default function Home() {
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
-        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요. 지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
+        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
         <form onSubmit={handleSubmit}>
           <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
           <label>생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="생년월일" required /></label>
@@ -58,7 +58,7 @@ export default function Home() {
         </form>
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요. 실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><a href="#sample">샘플 리포트 이어서 보기 ↓</a></div>
+          <div><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요.<br />실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><a href="#sample">샘플 리포트 이어서 보기 ↓</a></div>
         </article>}
       </section>}
 
@@ -79,7 +79,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="promise"><p className="section-kicker">OUR PROMISE</p><h2>아이를 정해진 운명에 가두지 않아요.</h2><p>오늘왜그래는 명리학을 아이를 이해하는 하나의 문화적 관점으로 사용합니다. 성격·진로·건강을 단정하지 않고, 부모의 실제 관찰과 아이의 성장 가능성을 가장 중요하게 생각해요.</p></section>
+      <section className="promise"><p className="section-kicker">OUR PROMISE</p><h2>아이를 정해진 운명에 가두지 않아요.</h2><p>오늘왜그래는 명리학을 아이를 이해하는 하나의 문화적 관점으로 사용합니다.<br />성격·진로·건강을 단정하지 않고, 부모의 실제 관찰과 아이의 성장 가능성을 가장 중요하게 생각해요.</p></section>
       <footer><a className="logo" href="#top">오늘왜그래 <span>ㅎㅎ</span></a><p>오늘도 조금 더 아이를 이해했나요?</p><small>이 서비스는 의료·심리·교육 진단을 대신하지 않습니다.</small></footer>
     </main>
   );
@@ -94,8 +94,8 @@ function ReasonPanel() {
   const tapeColors = ["#f8bbd0", "#ffff00", "#d5ff00", "#33ff33", "#e9ec69"];
   const tapeColor = tapeColors[new Date().getDate() % tapeColors.length];
   return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
-  <article><b>“놀이터에 가서 왜 바로 안 놀지?”</b><p>낯선 상황의 사람과 규칙을 먼저 살펴보고 있을 수 있어요. 구경하는 시간도 별이에게는 참여의 일부예요.</p></article>
-  <article><b>“끝낼 시간이면 왜 갑자기 화를 내지?”</b><p>몰입한 마음이 현실의 전환 속도를 따라가지 못한 순간일 수 있어요. 끝나기 5분 전에 미리 알려주세요.</p></article>
+  <article><b>“놀이터에 가서 왜 바로 안 놀지?”</b><p>낯선 상황의 사람과 규칙을 먼저 살펴보고 있을 수 있어요.<br />구경하는 시간도 별이에게는 참여의 일부예요.</p></article>
+  <article><b>“끝낼 시간이면 왜 갑자기 화를 내지?”</b><p>몰입한 마음이 현실의 전환 속도를 따라가지 못한 순간일 수 있어요.<br />끝나기 5분 전에 미리 알려주세요.</p></article>
   <article className="survival"><span style={{ backgroundColor: tapeColor }}>부모의 생존 한마디</span><blockquote>“먼저 보고 있어도 괜찮아. 준비되면 네가 출발 신호를 알려줘.”</blockquote></article>
   </div></section>; }
 
