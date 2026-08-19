@@ -83,8 +83,8 @@ export default function Home() {
         <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
         <form onSubmit={handleSubmit}>
           <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
-          <label>양력 생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
-          <label>태어난 시간<input name="birthTime" type="time" defaultValue="12:41" aria-label="태어난 시간" required /></label>
+          <label>양력 생년월일<input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
+          <label>태어난 시간<input name="birthTime" type="time" defaultValue="11:00" aria-label="태어난 시간" required /></label>
           <label>출생 도시<input name="birthCity" defaultValue="서울" aria-label="출생 도시" required /></label>
           <button className="primary" type="submit">마음속 꼬마동물 누구?</button>
         </form>
@@ -106,7 +106,7 @@ export default function Home() {
 
       <section className="sample" id="sample">
         <div className="sample-paper">
-          <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2024. 8. 30 · 오후 12:41 · 서울 출생 · 샘플 결과</p></div>
+          <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2025. 1. 1 · 오전 11:00 · 서울 출생 · 샘플 결과</p></div>
           <div className="report-shell">
             <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
             <div className="report-flow"><div id="today-report"><TodayPanel /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div></div>
