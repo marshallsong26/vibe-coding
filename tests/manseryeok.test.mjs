@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { calculateManseryeok } from "../lib/manseryeok.ts";
+import { selectLittleAnimal } from "../lib/character-rules.ts";
 
 const input = (birthDate, birthTime) => ({
   calendarType: "solar",
@@ -34,4 +35,12 @@ test("태어난 시간을 모르면 시주를 제공하지 않는다", () => {
   const result = calculateManseryeok(input("2025-01-01", null));
   assert.equal(result.pillars.hour, null);
   assert.equal(result.fiveElements.hour, null);
+});
+
+test("샘플의 경금 일간을 버전이 있는 호랑이 규칙으로 번역한다", () => {
+  const chart = calculateManseryeok(input("2025-01-01", "11:00"));
+  const character = selectLittleAnimal(chart);
+  assert.equal(character.dayMaster, "庚");
+  assert.equal(character.animalName, "호랑이");
+  assert.equal(character.ruleSet, "LITTLE-ANIMAL-DAY-MASTER-v1");
 });

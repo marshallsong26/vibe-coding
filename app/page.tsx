@@ -2,6 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
+import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
 
 const animals = [
   { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png", sealColor: "#A36637B3" },
@@ -14,7 +15,7 @@ const animals = [
 
 export default function Home() {
   const [started, setStarted] = useState(false);
-  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number]; chart: ManseryeokResult } | null>(null);
+  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult } | null>(null);
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
   const startRef = useRef<HTMLElement>(null);
@@ -30,9 +31,10 @@ export default function Home() {
     try {
       const birthInput = normalizeBirthInput(data);
       const chart = calculateManseryeok(birthInput);
-      // 원국 엔진 연결 전의 화면 확인용 캐릭터이며, 사주 계산 결과가 아닙니다.
-      const previewIndex = birthInput.birthDate.charCodeAt(birthInput.birthDate.length - 1) % animals.length;
-      setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[previewIndex], chart });
+      const character = selectLittleAnimal(chart);
+      const animal = animals.find((candidate) => candidate.name === character.animalName);
+      if (!animal) throw new Error("꼬마동물 규칙을 확인해 주세요.");
+      setResult({ nickname: String(data.get("nickname") || "아이"), animal, chart, character });
       setFormError("");
     } catch (error) {
       setResult(null);
@@ -91,7 +93,7 @@ export default function Home() {
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div className="result-copy"><p className="section-kicker">원국 계산 연결 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><div className="pillars" aria-label="계산된 사주 원국"><div><span>년주</span><b>{result.chart.pillars.year.stem}{result.chart.pillars.year.branch}</b></div><div><span>월주</span><b>{result.chart.pillars.month.stem}{result.chart.pillars.month.branch}</b></div><div><span>일주</span><b>{result.chart.pillars.day.stem}{result.chart.pillars.day.branch}</b></div><div><span>시주</span><b>{result.chart.pillars.hour ? `${result.chart.pillars.hour.stem}${result.chart.pillars.hour.branch}` : "시간 모름"}</b></div></div><p>네 기둥은 규칙 기반 계산기로 만들었어요.<br />꼬마동물 연결 규칙은 아직 검수 전이라 동물은 화면 확인용 미리보기예요.</p><small>계산 기준: 양력 · 한국 표준시 · 절입 기준 · 0시 일주 변경</small><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
+          <div className="result-copy"><p className="section-kicker">원국 계산 연결 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><div className="pillars" aria-label="계산된 사주 원국"><div><span>년주</span><b>{result.chart.pillars.year.stem}{result.chart.pillars.year.branch}</b></div><div><span>월주</span><b>{result.chart.pillars.month.stem}{result.chart.pillars.month.branch}</b></div><div><span>일주</span><b>{result.chart.pillars.day.stem}{result.chart.pillars.day.branch}</b></div><div><span>시주</span><b>{result.chart.pillars.hour ? `${result.chart.pillars.hour.stem}${result.chart.pillars.hour.branch}` : "시간 모름"}</b></div></div><p>네 기둥은 규칙 기반 계산기로 만들었어요.<br />마음속 꼬마동물은 일간 <b>{result.character.dayMaster}</b>의 특징인 ‘{result.character.basis}’을 아이 눈높이의 캐릭터 언어로 옮긴 결과예요.</p><small>계산 기준: 양력 · 한국 표준시 · 절입 기준 · 0시 일주 변경</small><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
         </article>}
       </section>}
 
