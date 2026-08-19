@@ -44,7 +44,7 @@ export default function Home() {
         <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
         <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
         <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
-        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이결 캐릭터와 리포트를 만날 수 있어요.</p>
+        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 마음속 꼬마동물과 리포트를 만날 수 있어요.</p>
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
@@ -86,7 +86,7 @@ export default function Home() {
 }
 
 function NaturePanel() { return <section className="report-panel">
-  <div className="character-card"><div className="character-face" aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 아이결 캐릭터</p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
+  <div className="character-card"><div className="character-face" aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 마음속 꼬마동물</p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
   <div className="card-grid three"><article><span>반짝이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>반짝이는 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
   </section>; }
 
