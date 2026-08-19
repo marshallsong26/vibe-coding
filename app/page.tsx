@@ -9,7 +9,14 @@ const reportTabs = [
   { id: "note", label: "오늘도그랬다" },
 ];
 
-const animals = ["카피바라", "호랑이", "다람쥐", "아기 여우", "수달", "레서판다"];
+const animals = [
+  { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png" },
+  { name: "호랑이", alias: "준비운동만 벌써 세 번째인", image: "/characters/tiger.png" },
+  { name: "다람쥐", alias: "질문 주머니가 꽉 찬", image: "/characters/squirrel.png" },
+  { name: "아기 여우", alias: "조용하다 싶으면 실험 중인", image: "/characters/fox.png" },
+  { name: "수달", alias: "신나는 건 내일까지 못 미루는", image: "/characters/otter.png" },
+  { name: "레서판다", alias: "익숙해지면 매력 폭발하는", image: "/characters/red-panda.png" },
+];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("nature");
@@ -32,7 +39,13 @@ export default function Home() {
         <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
         <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
         <div className="hero-actions"><button className="primary" onClick={() => setStarted(true)}>무료로 시작하기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
-        <div className="animal-strip" aria-label="아이결 캐릭터 예시">{animals.map((animal, index) => <span key={animal} className={`animal a${index + 1}`}>{animal}</span>)}</div>
+        <div className="character-teaser">
+          <p>우리 집에는 어떤 작은 동물이 살고 있을까요?</p>
+          <div className="animal-strip" aria-label="아이 캐릭터 예시">{animals.map((animal, index) => <article key={animal.name} className={`animal a${index + 1}`}>
+            <img src={animal.image} alt={`${animal.alias} ${animal.name} 캐릭터`} />
+            <div><small>{animal.alias}</small><strong>{animal.name}</strong></div>
+          </article>)}</div>
+        </div>
       </section>
 
       {started && <section className="start-panel" aria-label="아이 정보 입력">
