@@ -14,6 +14,7 @@ const animals = [
 export default function Home() {
   const [started, setStarted] = useState(false);
   const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number] } | null>(null);
+  const [shareNotice, setShareNotice] = useState("");
   const startRef = useRef<HTMLElement>(null);
 
   const openStart = () => {
@@ -28,6 +29,24 @@ export default function Home() {
     const seed = birthDate.replaceAll("-", "").split("").reduce((sum, number) => sum + Number(number), 0);
     setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[seed % animals.length] });
     window.setTimeout(() => document.querySelector("#animal-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
+  };
+
+  const handleShare = async () => {
+    if (!result) return;
+    const url = `${window.location.origin}${window.location.pathname}#sample`;
+    const text = `${result.nickname}의 마음속 꼬마동물은 ‘${result.animal.alias} ${result.animal.name}’! 오늘왜그래 ㅎㅎ에서 확인해보세요.`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${result.nickname}의 마음속 꼬마동물`, text, url });
+        setShareNotice("공유할 곳을 선택했어요.");
+      } else {
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+        setShareNotice("공유 문구와 링크를 복사했어요.");
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      setShareNotice("공유하지 못했어요. 잠시 후 다시 눌러주세요.");
+    }
   };
   return (
     <main className="theme-earth">
@@ -60,7 +79,7 @@ export default function Home() {
         </form>
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요.<br />실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><a href="#sample">샘플 리포트 이어서 보기 ↓</a></div>
+          <div className="result-copy"><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요.<br />실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
         </article>}
       </section>}
 
