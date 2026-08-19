@@ -80,3 +80,4 @@ body{background-color:#f8eadc;background-image:linear-gradient(90deg,transparent
 @media(max-width:760px){.sample,.hero{background-size:190px 190px}.hero{padding:16px}.hero-paper{min-height:500px;padding:70px 18px 54px;border-radius:19px}}
 
 .daily-grid .play-reason{margin:10px auto 8px;color:var(--orange);font:400 17px/1.5 "DearFromsol"}
+.daily-grid .prompt-reason{margin:10px auto 0;color:var(--green);font:400 17px/1.5 "DearFromsol"}
