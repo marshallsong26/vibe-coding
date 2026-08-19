@@ -90,10 +90,13 @@ function NaturePanel() { return <section className="report-panel">
   <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>푹 빠질 때의 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
   </section>; }
 
-function ReasonPanel() { return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
+function ReasonPanel() {
+  const tapeColors = ["#f8bbd0", "#ffff00", "#d5ff00", "#33ff33", "#e9ec69"];
+  const tapeColor = tapeColors[new Date().getDate() % tapeColors.length];
+  return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
   <article><b>“놀이터에 가서 왜 바로 안 놀지?”</b><p>낯선 상황의 사람과 규칙을 먼저 살펴보고 있을 수 있어요. 구경하는 시간도 별이에게는 참여의 일부예요.</p></article>
   <article><b>“끝낼 시간이면 왜 갑자기 화를 내지?”</b><p>몰입한 마음이 현실의 전환 속도를 따라가지 못한 순간일 수 있어요. 끝나기 5분 전에 미리 알려주세요.</p></article>
-  <article className="survival"><span>부모의 생존 한마디</span><blockquote>“먼저 보고 있어도 괜찮아. 준비되면 네가 출발 신호를 알려줘.”</blockquote></article>
+  <article className="survival"><span style={{ backgroundColor: tapeColor }}>부모의 생존 한마디</span><blockquote>“먼저 보고 있어도 괜찮아. 준비되면 네가 출발 신호를 알려줘.”</blockquote></article>
   </div></section>; }
 
 function TodayPanel() {
