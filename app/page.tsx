@@ -54,7 +54,7 @@ export default function Home() {
           <label>생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="생년월일" required /></label>
           <label>태어난 시간<input name="birthTime" type="time" defaultValue="12:41" aria-label="태어난 시간" required /></label>
           <label>출생 도시<input name="birthCity" defaultValue="서울" aria-label="출생 도시" required /></label>
-          <button className="primary" type="submit">우리 아이 동물 만나기</button>
+          <button className="primary" type="submit">마음속 꼬마동물 누구?</button>
         </form>
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
