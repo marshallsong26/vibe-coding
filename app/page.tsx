@@ -65,17 +65,17 @@ export default function Home() {
       <section className="how" id="how">
         <div className="section-heading"><p className="section-kicker">HOW IT WORKS</p><h2>답답함이 이해가 되는 세 단계</h2></div>
         <ol>
-          <li><b>1</b><div><strong>원래왜그래</strong><p>출생 정보를 바탕으로 타고난 기질과 세상을 만나는 방식을 살펴봐요.</p></div></li>
-          <li><b>2</b><div><strong>그래서그랬구나</strong><p>이해되지 않던 행동을 아이의 속도와 감정 언어로 다시 풀어봐요.</p></div></li>
-          <li><b>3</b><div><strong>오늘의 작전</strong><p>오늘 바로 해볼 놀이와 한마디를 가볍게 챙겨가요.</p></div></li>
+          <li><b>1</b><div><strong>오늘왜그래</strong><p>오늘 아이에게 잘 맞는 한마디와 놀이를 가장 먼저 확인해요.</p></div></li>
+          <li><b>2</b><div><strong>원래왜그래</strong><p>출생 정보를 바탕으로 타고난 기질과 세상을 만나는 방식을 살펴봐요.</p></div></li>
+          <li><b>3</b><div><strong>그래서그랬구나</strong><p>이해되지 않던 행동을 아이의 속도와 감정 언어로 다시 풀어봐요.</p></div></li>
         </ol>
       </section>
 
       <section className="sample" id="sample">
         <div className="section-heading"><p className="section-kicker">SAMPLE REPORT</p><h2>별이는 오늘 왜 그럴까?</h2><p>2024. 8. 30 · 오후 12:41 · 서울 출생 · 샘플 결과</p></div>
         <div className="report-shell">
-          <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#nature-report">01 원래왜그래</a><a href="#reason-report">02 그래서그랬구나</a><a href="#today-report">03 오늘왜그래</a></nav>
-          <div className="report-flow"><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>02</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div><div className="report-divider"><span>03</span><p>이해했다면, 오늘은 가볍게 이렇게</p></div><div id="today-report"><TodayPanel /></div></div>
+          <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
+          <div className="report-flow"><div id="today-report"><TodayPanel /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel /></div></div>
         </div>
       </section>
 
@@ -109,7 +109,7 @@ function TodayPanel() {
   ];
   const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
   const todayColor = colors[dayNumber % colors.length];
-  return <section className="report-panel"><p className="report-label">매일 바뀌는 가벼운 보너스</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
+  return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
   <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
   <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ background: todayColor.hex }} /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
   <article><span>오늘의 찰떡놀이</span><h4>내가 만드는 쿠션 길</h4><p>쿠션 세 개를 놓고 별이에게 출발점과 지나갈 순서를 직접 정하게 해주세요.</p></article>
