@@ -1,3 +1,5 @@
+import lunar from "lunar-javascript";
+
 export type CalendarType = "solar";
 
 export type BirthInput = {
@@ -23,14 +25,18 @@ export type FourPillars = {
 export type ManseryeokResult = {
   input: BirthInput;
   pillars: FourPillars;
+  fiveElements: {
+    year: string;
+    month: string;
+    day: string;
+    hour: string | null;
+  };
   engine: {
     name: string;
     version: string;
     ruleSet: string;
   };
 };
-
-export type ManseryeokCalculator = (input: BirthInput) => ManseryeokResult;
 
 /**
  * 화면 입력을 만세력 엔진이 받을 수 있는 고정 형식으로 바꿉니다.
@@ -55,13 +61,35 @@ export function normalizeBirthInput(form: FormData): BirthInput {
 }
 
 /**
- * 검증된 규칙 엔진을 연결할 단일 진입점입니다.
- * 엔진 연결 전에는 원국을 추정하거나 생성하지 않습니다.
+ * 검증 가능한 규칙 엔진을 호출하는 단일 진입점입니다.
  */
-export function calculateManseryeok(
-  input: BirthInput,
-  calculator?: ManseryeokCalculator,
-): ManseryeokResult | null {
-  return calculator ? calculator(input) : null;
-}
+export function calculateManseryeok(input: BirthInput): ManseryeokResult {
+  const [year, month, day] = input.birthDate.split("-").map(Number);
+  const [hour, minute] = (input.birthTime || "12:00").split(":").map(Number);
+  const eightChar = lunar.Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar().getEightChar();
 
+  // sect 2: 23시는 자시로 보지만 일주는 민간시 00:00에 변경합니다.
+  eightChar.setSect(2);
+
+  const hasBirthTime = input.birthTime !== null;
+  return {
+    input,
+    pillars: {
+      year: { stem: eightChar.getYearGan(), branch: eightChar.getYearZhi() },
+      month: { stem: eightChar.getMonthGan(), branch: eightChar.getMonthZhi() },
+      day: { stem: eightChar.getDayGan(), branch: eightChar.getDayZhi() },
+      hour: hasBirthTime ? { stem: eightChar.getTimeGan(), branch: eightChar.getTimeZhi() } : null,
+    },
+    fiveElements: {
+      year: eightChar.getYearWuXing(),
+      month: eightChar.getMonthWuXing(),
+      day: eightChar.getDayWuXing(),
+      hour: hasBirthTime ? eightChar.getTimeWuXing() : null,
+    },
+    engine: {
+      name: "lunar-javascript",
+      version: "1.7.7",
+      ruleSet: "KR-SOLAR-KST-SECT2-v1",
+    },
+  };
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
-import { calculateManseryeok, normalizeBirthInput } from "../lib/manseryeok";
+import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 
 const animals = [
   { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png", sealColor: "#A36637B3" },
@@ -14,7 +14,7 @@ const animals = [
 
 export default function Home() {
   const [started, setStarted] = useState(false);
-  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number] } | null>(null);
+  const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number]; chart: ManseryeokResult } | null>(null);
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
   const startRef = useRef<HTMLElement>(null);
@@ -32,8 +32,8 @@ export default function Home() {
       const chart = calculateManseryeok(birthInput);
       // 원국 엔진 연결 전의 화면 확인용 캐릭터이며, 사주 계산 결과가 아닙니다.
       const previewIndex = birthInput.birthDate.charCodeAt(birthInput.birthDate.length - 1) % animals.length;
-      setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[previewIndex] });
-      setFormError(chart ? "" : "현재는 입력 흐름을 확인하는 미리보기예요. 정식 원국 계산은 검증 후 열립니다.");
+      setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[previewIndex], chart });
+      setFormError("");
     } catch (error) {
       setResult(null);
       setFormError(error instanceof Error ? error.message : "입력 정보를 확인해 주세요.");
@@ -91,7 +91,7 @@ export default function Home() {
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div className="result-copy"><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>지금 보이는 동물은 화면 확인을 위한 미리보기예요.<br />정식 결과는 검증된 규칙 엔진이 만든 원국을 바탕으로 정해집니다.</p><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
+          <div className="result-copy"><p className="section-kicker">원국 계산 연결 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><div className="pillars" aria-label="계산된 사주 원국"><div><span>년주</span><b>{result.chart.pillars.year.stem}{result.chart.pillars.year.branch}</b></div><div><span>월주</span><b>{result.chart.pillars.month.stem}{result.chart.pillars.month.branch}</b></div><div><span>일주</span><b>{result.chart.pillars.day.stem}{result.chart.pillars.day.branch}</b></div><div><span>시주</span><b>{result.chart.pillars.hour ? `${result.chart.pillars.hour.stem}${result.chart.pillars.hour.branch}` : "시간 모름"}</b></div></div><p>네 기둥은 규칙 기반 계산기로 만들었어요.<br />꼬마동물 연결 규칙은 아직 검수 전이라 동물은 화면 확인용 미리보기예요.</p><small>계산 기준: 양력 · 한국 표준시 · 절입 기준 · 0시 일주 변경</small><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
         </article>}
       </section>}
 
