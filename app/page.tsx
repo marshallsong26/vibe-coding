@@ -40,11 +40,13 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
-        <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
-        <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
-        <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
-        <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
-        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 <span className="animal-word">마음속 꼬마동물</span>과 리포트를 만날 수 있어요.</p>
+        <div className="hero-paper">
+          <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
+          <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
+          <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
+          <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
+          <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 <span className="animal-word">마음속 꼬마동물</span>과 리포트를 만날 수 있어요.</p>
+        </div>
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
