@@ -78,3 +78,5 @@ body{background-color:#f8eadc;background-image:linear-gradient(90deg,transparent
 /* More vivid plaid, repeated as the hero's outer frame */
 .sample,.hero{background-color:#ffe3c5;background-image:linear-gradient(90deg,transparent 0 54px,#ff4b16 54px 63px,transparent 63px 118px,#0077b6 118px 126px,transparent 126px 182px,#ff4f97 182px 190px,transparent 190px 246px),linear-gradient(0deg,transparent 0 54px,#ff4b16 54px 63px,transparent 63px 118px,#258f43 118px 126px,transparent 126px 182px,#ffc21c 182px 190px,transparent 190px 246px);background-size:246px 246px}.hero{min-height:auto;padding:38px 42px}.hero-paper{max-width:1120px;min-height:560px;margin:0 auto;padding:92px 36px 70px;display:flex;flex-direction:column;justify-content:center;border-radius:28px;background:rgba(255,253,247,.96);box-shadow:0 1px 0 #fff,0 8px 24px rgba(74,46,27,.12)}
 @media(max-width:760px){.sample,.hero{background-size:190px 190px}.hero{padding:16px}.hero-paper{min-height:500px;padding:70px 18px 54px;border-radius:19px}}
+
+.daily-grid .play-reason{margin:10px auto 8px;color:var(--orange);font:400 17px/1.5 "DearFromsol"}

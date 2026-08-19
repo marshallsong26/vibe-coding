@@ -119,6 +119,6 @@ function TodayPanel() {
   return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
   <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
   <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: todayColor.hex }} aria-hidden="true" /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
-  <article><span>오늘의 찰떡놀이</span><h4>내가 만드는 쿠션 길</h4><p>쿠션 세 개를 놓고 별이에게 출발점과 지나갈 순서를 직접 정하게 해주세요.</p></article>
+  <article><span>오늘의 찰떡놀이</span><h4>내가 만드는 쿠션 길</h4><p className="play-reason">오늘은 직접 순서를 정할 때 마음이 더 잘 움직여요.</p><p>쿠션 세 개를 놓고 별이에게 출발점과 지나갈 순서를 직접 정하게 해주세요.</p></article>
   <article><span>잠들기 전 질문</span><h4>“오늘 네 마음속 호랑이는 언제 깨어났어?”</h4></article>
   </div></section>; }
