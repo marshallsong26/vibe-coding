@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
+import { calculateManseryeok, normalizeBirthInput } from "../lib/manseryeok";
 
 const animals = [
   { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png", sealColor: "#A36637B3" },
@@ -15,6 +16,7 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [result, setResult] = useState<{ nickname: string; animal: typeof animals[number] } | null>(null);
   const [shareNotice, setShareNotice] = useState("");
+  const [formError, setFormError] = useState("");
   const startRef = useRef<HTMLElement>(null);
 
   const openStart = () => {
@@ -25,9 +27,18 @@ export default function Home() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const birthDate = String(data.get("birthDate") || "");
-    const seed = birthDate.replaceAll("-", "").split("").reduce((sum, number) => sum + Number(number), 0);
-    setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[seed % animals.length] });
+    try {
+      const birthInput = normalizeBirthInput(data);
+      const chart = calculateManseryeok(birthInput);
+      // 원국 엔진 연결 전의 화면 확인용 캐릭터이며, 사주 계산 결과가 아닙니다.
+      const previewIndex = birthInput.birthDate.charCodeAt(birthInput.birthDate.length - 1) % animals.length;
+      setResult({ nickname: String(data.get("nickname") || "아이"), animal: animals[previewIndex] });
+      setFormError(chart ? "" : "현재는 입력 흐름을 확인하는 미리보기예요. 정식 원국 계산은 검증 후 열립니다.");
+    } catch (error) {
+      setResult(null);
+      setFormError(error instanceof Error ? error.message : "입력 정보를 확인해 주세요.");
+      return;
+    }
     window.setTimeout(() => document.querySelector("#animal-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
   };
 
@@ -72,14 +83,15 @@ export default function Home() {
         <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />지금은 캐릭터를 만나는 화면 흐름을 테스트할 수 있어요.</p></div>
         <form onSubmit={handleSubmit}>
           <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
-          <label>생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="생년월일" required /></label>
+          <label>양력 생년월일<input name="birthDate" type="date" defaultValue="2024-08-30" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
           <label>태어난 시간<input name="birthTime" type="time" defaultValue="12:41" aria-label="태어난 시간" required /></label>
           <label>출생 도시<input name="birthCity" defaultValue="서울" aria-label="출생 도시" required /></label>
           <button className="primary" type="submit">마음속 꼬마동물 누구?</button>
         </form>
+        {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
           <div className="result-art"><img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /></div>
-          <div className="result-copy"><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>아직 만세력 계산 모듈을 연결하기 전이라 동물은 생년월일을 이용한 임시 규칙으로 보여드려요.<br />실제 결과는 검증된 원국 계산값을 바탕으로 정해집니다.</p><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
+          <div className="result-copy"><p className="section-kicker">화면 흐름 테스트 결과</p><h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3><p>지금 보이는 동물은 화면 확인을 위한 미리보기예요.<br />정식 결과는 검증된 규칙 엔진이 만든 원국을 바탕으로 정해집니다.</p><div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div><small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}</div>
         </article>}
       </section>}
 
@@ -155,5 +167,5 @@ function TodayPanel() {
   <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
   <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: todayColor.hex }} aria-hidden="true" /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
   <article><span>오늘의 찰떡놀이</span><h4>내가 만드는 쿠션 길</h4><p className="play-reason">오늘은 직접 순서를 정할 때 마음이 더 잘 움직여요.</p><p>쿠션 세 개를 놓고 별이에게 출발점과 지나갈 순서를 직접 정하게 해주세요.</p></article>
-  <article><span>잠들기 전 질문</span><h4>“오늘 네 마음속 호랑이는 언제 깨어났어?”</h4><p className="prompt-reason">오늘 아이의 마음이 깨어난 순간을 편안하게 돌아보는 질문이에요.</p></article>
+  <article><span>잠들기 전 질문해볼까요?</span><h4>“오늘 네 마음속 호랑이는 언제 깨어났어?”</h4><p className="prompt-reason">오늘 아이의 마음이 깨어난 순간을 편안하게 돌아보는 질문이에요.</p></article>
   </div></section>; }
