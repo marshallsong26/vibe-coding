@@ -57,7 +57,7 @@ body{background-color:#f8eadc;background-image:linear-gradient(90deg,transparent
 @media(max-width:760px){body{background-size:120px 120px}.theme-earth{margin:0;border-radius:0}.report-flow .character-card{grid-template-columns:78px 1fr}.report-flow .character-face{width:68px;height:68px}.character-face span{font-size:42px;-webkit-text-stroke:1.5px var(--ink)}.today-status{display:block}.today-status p{margin-top:7px;font-size:18px}}
 
 /* Little-animal seal: compact, solid and close to its title */
-.report-flow .character-card{grid-template-columns:84px minmax(0,1fr);gap:14px;align-items:start}.report-flow .character-face{width:78px;height:78px;margin-top:70px;border:0;background:rgba(77,23,108,.78);box-shadow:4px 5px 0 rgba(243,79,155,.28);transform:rotate(-3deg)}.character-face span{color:#fff;-webkit-text-stroke:0;text-shadow:none;font-size:50px}
+.report-flow .character-card{grid-template-columns:84px minmax(0,1fr);gap:14px;align-items:start}.report-flow .character-face{width:78px;height:78px;margin-top:70px;border:0;box-shadow:none;transform:rotate(-3deg)}.character-face span{color:#fff;-webkit-text-stroke:0;text-shadow:none;font-size:50px}
 @media(max-width:760px){.report-flow .character-card{grid-template-columns:62px minmax(0,1fr);gap:10px}.report-flow .character-face{width:58px;height:58px;margin-top:54px}.character-face span{font-size:38px;-webkit-text-stroke:0}}
 
 /* Daily companion color heart */

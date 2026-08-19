@@ -3,12 +3,12 @@
 import { FormEvent, useRef, useState } from "react";
 
 const animals = [
-  { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png" },
-  { name: "호랑이", alias: "준비운동만 벌써 세 번째인", image: "/characters/tiger.png" },
-  { name: "다람쥐", alias: "질문 주머니가 꽉 찬", image: "/characters/squirrel.png" },
-  { name: "아기 여우", alias: "조용하다 싶으면 실험 중인", image: "/characters/fox.png" },
-  { name: "수달", alias: "신나는 건 내일까지 못 미루는", image: "/characters/otter.png" },
-  { name: "레서판다", alias: "익숙해지면 매력 폭발하는", image: "/characters/red-panda.png" },
+  { name: "카피바라", alias: "급한 건 엄마아빠뿐인", image: "/characters/capybara.png", sealColor: "#A36637B3" },
+  { name: "호랑이", alias: "준비운동만 벌써 세 번째인", image: "/characters/tiger.png", sealColor: "#EE5426B3" },
+  { name: "다람쥐", alias: "질문 주머니가 꽉 찬", image: "/characters/squirrel.png", sealColor: "#D99A09B3" },
+  { name: "아기 여우", alias: "조용하다 싶으면 실험 중인", image: "/characters/fox.png", sealColor: "#F06A9DB3" },
+  { name: "수달", alias: "신나는 건 내일까지 못 미루는", image: "/characters/otter.png", sealColor: "#368F8BB3" },
+  { name: "레서판다", alias: "익숙해지면 매력 폭발하는", image: "/characters/red-panda.png", sealColor: "#8E3D2CB3" },
 ];
 
 export default function Home() {
@@ -86,7 +86,7 @@ export default function Home() {
 }
 
 function NaturePanel() { return <section className="report-panel">
-  <div className="character-card"><div className="character-face" aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 <span className="animal-word">마음속 꼬마동물</span></p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
+  <div className="character-card"><div className="character-face" style={{ backgroundColor: animals[1].sealColor }} aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 ‘마음속 꼬마동물’</p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
   <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>푹 빠질 때의 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
   </section>; }
 
