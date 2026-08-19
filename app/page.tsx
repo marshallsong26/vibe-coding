@@ -44,7 +44,7 @@ export default function Home() {
         <h1>오늘 왜 그래?<br /><em>알고 보니 그럴 만했네.</em></h1>
         <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
         <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
-        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 마음속 꼬마동물과 리포트를 만날 수 있어요.</p>
+        <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 <span className="animal-word">마음속 꼬마동물</span>과 리포트를 만날 수 있어요.</p>
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
@@ -86,8 +86,8 @@ export default function Home() {
 }
 
 function NaturePanel() { return <section className="report-panel">
-  <div className="character-card"><div className="character-face" aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 마음속 꼬마동물</p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
-  <div className="card-grid three"><article><span>반짝이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>반짝이는 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
+  <div className="character-card"><div className="character-face" aria-hidden="true"><span>虎</span></div><div><p className="report-label">별이의 <span className="animal-word">마음속 꼬마동물</span></p><h3>준비운동만 벌써<br />세 번째인 호랑이</h3><p>큰 에너지를 안에 품고 있지만, 새로운 상황에서는 충분히 살펴보고 자기 마음의 출발 신호를 기다리는 아이예요.</p></div></div>
+  <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>관찰력</h4><p>작은 변화를 발견하고 마음에 든 것은 오래 들여다봐요.</p></article><article><span>푹 빠질 때의 강점</span><h4>몰입</h4><p>준비가 끝나면 호랑이처럼 힘차게 자기 세계로 뛰어들어요.</p></article><article><span>기억해 주세요</span><h4>자기 속도</h4><p>느린 시작은 의욕이 없다는 뜻이 아니라 준비하는 방식일 수 있어요.</p></article></div>
   </section>; }
 
 function ReasonPanel() { return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
@@ -96,7 +96,10 @@ function ReasonPanel() { return <section className="report-panel"><p className="
   <article className="survival"><span>부모의 생존 한마디</span><blockquote>“먼저 보고 있어도 괜찮아. 준비되면 네가 출발 신호를 알려줘.”</blockquote></article>
   </div></section>; }
 
-function TodayPanel() { return <section className="report-panel"><p className="report-label">매일 바뀌는 가벼운 보너스</p><h3>오늘왜그래</h3><div className="daily-grid">
+function TodayPanel() {
+  const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(new Date());
+  const messages = ["마음이 먼저 움직일 때까지 한 박자 기다려주면 좋은 날이에요.", "작은 선택권 하나가 아이의 자신감을 크게 깨워주는 날이에요.", "익숙한 놀이에 새로운 규칙 하나를 더하면 신이 나는 날이에요.", "말보다 몸을 먼저 움직이면 마음도 술술 따라오는 날이에요.", "시작보다 마무리를 함께 축하해주면 좋은 날이에요.", "천천히 순서를 정할수록 아이의 마음이 가벼워지는 날이에요.", "잘하려는 마음보다 재미있는 마음을 응원해주면 좋은 날이에요."];
+  return <section className="report-panel"><p className="report-label">매일 바뀌는 가벼운 보너스</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[new Date().getDay()]}</p></div><div className="daily-grid">
   <article className="mission"><span>오늘의 작전</span><h4>오늘의 순서 대장을 맡겨주세요</h4><p>옷 입기, 양치하기, 가방 챙기기 중 무엇을 먼저 할지 별이가 정하게 해주세요.</p><b>“어떤 것부터 시작할래?”</b></article>
   <article className="color-card"><span>오늘의 기분색</span><div className="color-dot" /><h4>새싹 연두</h4><p>집 안에서 연두색 물건을 세 개 찾아보세요.</p></article>
   <article><span>오늘의 냠냠 작전</span><h4>바삭한 소리 탐정</h4><p>먹지 않아도 괜찮아요. 오늘 가장 재미있는 음식 소리를 함께 찾아봐요.</p></article>
