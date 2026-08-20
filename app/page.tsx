@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
 import { animalProfiles } from "../lib/animal-profiles";
@@ -48,8 +48,18 @@ export default function Home() {
   const [result, setResult] = useState<ReportResult | null>(null);
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const startRef = useRef<HTMLElement>(null);
   const report = result ?? sampleReport;
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
 
   const openStart = () => {
     setStarted(true);
@@ -96,10 +106,21 @@ export default function Home() {
     <main className="theme-earth">
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
-        <nav aria-label="주요 메뉴">
+        <nav className="desktop-nav" aria-label="주요 메뉴">
           <a href="#sample">미리보기</a><a href="#how">이용 방법</a>
           <button className="nav-cta" onClick={openStart}>우리 아이 알아보기</button>
         </nav>
+        <div className="mobile-nav">
+          <button className="nav-cta" onClick={() => { openStart(); setMenuOpen(false); }}>아이 알아보기</button>
+          <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"} onClick={() => setMenuOpen((open) => !open)}>
+            <span /><span /><span />
+          </button>
+          {menuOpen && <nav className="mobile-menu" id="mobile-menu" aria-label="모바일 메뉴">
+            <a href="#sample" onClick={() => setMenuOpen(false)}><span>01</span> 미리보기</a>
+            <a href="#how" onClick={() => setMenuOpen(false)}><span>02</span> 이용 방법</a>
+            <button type="button" onClick={() => { openStart(); setMenuOpen(false); }}><span>03</span> 우리 아이 알아보기</button>
+          </nav>}
+        </div>
       </header>
 
       <section className="hero" id="top">
