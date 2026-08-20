@@ -174,3 +174,5 @@ body{background-color:#f8eadc;background-image:linear-gradient(90deg,transparent
 @keyframes mystery-swap{0%{opacity:0;transform:translateX(20px) rotate(5deg) scale(.88)}55%{opacity:1;transform:translateX(-3px) rotate(-2deg) scale(1.04)}100%{opacity:1;transform:none}}
 @media(max-width:760px){.animal-mystery{margin-top:20px}.animal-mystery>p{font-size:17px}.mystery-stage{width:116px;height:116px}.mystery-stage>span{font-size:58px}.mystery-stage small{bottom:5px;font-size:8px}.hero .hero-actions{margin-top:15px}}
 @media(prefers-reduced-motion:reduce){.mystery-stage{animation:none}}
+
+.mystery-stage{background:transparent;box-shadow:none;border-radius:0}.mystery-stage img{filter:brightness(.24) grayscale(.25) saturate(.55);opacity:.72}.mystery-stage>span{color:#fff;text-shadow:none}
