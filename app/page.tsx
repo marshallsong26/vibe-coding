@@ -51,6 +51,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [activeReport, setActiveReport] = useState("today-report");
+  const [mysteryAnimalIndex, setMysteryAnimalIndex] = useState(0);
   const startRef = useRef<HTMLElement>(null);
   const report = result ?? sampleReport;
 
@@ -74,6 +75,18 @@ export default function Home() {
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [result, showReport]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      setMysteryAnimalIndex((current) => {
+        let next = Math.floor(Math.random() * animals.length);
+        if (next === current) next = (next + 1) % animals.length;
+        return next;
+      });
+    }, 720);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const openStart = () => {
     setStarted(true);
@@ -147,6 +160,14 @@ export default function Home() {
           <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
           <h1>오늘 왜 그래?<br /><em className="rainbow-copy" aria-label="알고 보니 그럴 만했네."><span aria-hidden="true">알고 보니</span> <span className="rainbow-letters" aria-hidden="true"><i>그</i><i>럴</i><i>만</i><i>했</i><i>네</i><i>.</i></span></em></h1>
           <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
+          <div className="animal-mystery">
+            <p>우리 아이 마음속에는 누가 살고 있을까요?</p>
+            <div className="mystery-stage" key={mysteryAnimalIndex} aria-hidden="true">
+              <img src={animals[mysteryAnimalIndex].image} alt="" />
+              <span>?</span>
+              <small>12가지 꼬마동물 중</small>
+            </div>
+          </div>
           <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><button className="secondary" type="button" onClick={openSample}>샘플 먼저 보기</button></div>
           <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 <span className="animal-word">마음속 꼬마동물</span>과 리포트를 만날 수 있어요.</p>
         </div>
