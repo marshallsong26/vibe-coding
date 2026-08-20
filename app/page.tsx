@@ -120,7 +120,7 @@ export default function Home() {
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
         <nav className="desktop-nav" aria-label="주요 메뉴">
-          <a href="#sample">미리보기</a><a href="#how">이용 방법</a>
+          <a href="#sample">샘플 리포트</a>
           <button className="nav-cta" onClick={openStart}>우리 아이 알아보기</button>
         </nav>
         <div className="mobile-nav">
@@ -130,8 +130,7 @@ export default function Home() {
           </button>
           {menuOpen && <nav className="mobile-menu" id="mobile-menu" aria-label="모바일 메뉴">
             <a href="#sample" onClick={() => setMenuOpen(false)}><span>01</span> 미리보기</a>
-            <a href="#how" onClick={() => setMenuOpen(false)}><span>02</span> 이용 방법</a>
-            <button type="button" onClick={() => { openStart(); setMenuOpen(false); }}><span>03</span> 우리 아이 알아보기</button>
+            <button type="button" onClick={() => { openStart(); setMenuOpen(false); }}><span>02</span> 우리 아이 알아보기</button>
           </nav>}
         </div>
       </header>
@@ -147,7 +146,7 @@ export default function Home() {
       </section>
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
-        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />계산된 원국에 맞춰 아이만의 리포트가 바로 바뀌어요.</p></div>
+        <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p className="start-lead">오늘의 행동부터 타고난 마음까지,<br />세 장의 리포트로 차근차근 알아봐요.</p><small className="start-privacy">입력한 정보는 저장하지 않아요.</small></div>
         <form className="birth-form" onSubmit={handleSubmit}>
           <label className="form-field"><span><b>01</b> 아이 애칭</span><input name="nickname" defaultValue="별이" aria-label="아이 애칭" placeholder="예: 별이" required /></label>
           <label className="form-field"><span><b>02</b> 양력 생년월일</span><input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
@@ -175,15 +174,6 @@ export default function Home() {
           </div>
         </article>}
       </section>}
-
-      <section className="how" id="how">
-        <div className="section-heading"><p className="section-kicker">HOW IT WORKS</p><h2>답답함이 이해가 되는 세 단계</h2></div>
-        <ol>
-          <li><b>1</b><div><strong>오늘왜그래</strong><p>오늘 아이에게 잘 맞는 한마디와 놀이를 가장 먼저 확인해요.</p></div></li>
-          <li><b>2</b><div><strong>원래왜그래</strong><p>출생 정보를 바탕으로 타고난 기질과 세상을 만나는 방식을 살펴봐요.</p></div></li>
-          <li><b>3</b><div><strong>그래서그랬구나</strong><p>이해되지 않던 행동을 아이의 속도와 감정 언어로 다시 풀어봐요.</p></div></li>
-        </ol>
-      </section>
 
       <section className="sample" id="sample">
         <div className="sample-paper">
