@@ -161,7 +161,7 @@ export default function Home() {
           <h1>오늘 왜 그래?<br /><em className="rainbow-copy" aria-label="알고 보니 그럴 만했네."><span aria-hidden="true">알고 보니</span> <span className="rainbow-letters" aria-hidden="true"><i>그</i><i>럴</i><i>만</i><i>했</i><i>네</i><i>.</i></span></em></h1>
           <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
           <div className="animal-mystery">
-            <p>어떤 꼬마동물이 살고 있을까요?</p>
+            <p>우리 아이 마음속에는,<br />어떤 꼬마동물이 살고 있을까요?</p>
             <div className="mystery-stage" key={mysteryAnimalIndex} aria-hidden="true">
               <img src={animals[mysteryAnimalIndex].image} alt="" />
               <span>?</span>
