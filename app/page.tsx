@@ -220,16 +220,18 @@ function NaturePanel({ report }: { report: ReportResult }) {
 
 function ReasonPanel({ report }: { report: ReportResult }) {
   const profile = animalProfiles[report.character.animalName];
+  const [understood, setUnderstood] = useState(false);
   const tapeColors = ["#f8bbd0", "#ffff00", "#d5ff00", "#33ff33", "#e9ec69"];
   const tapeColor = tapeColors[new Date().getDate() % tapeColors.length];
   return <section className="report-panel"><p className="report-label">행동 뒤에 숨은 아이만의 이유</p><h3>그래서 그랬구나</h3><div className="reason-list">
   <article><b>“왜 바로 내 말대로 움직이지 않지?”</b><p>{profile.reason}<br />행동보다 아이의 준비 신호를 먼저 살펴봐주세요.</p></article>
   <article><b>“왜 바뀌는 순간에 더 힘들어하지?”</b><p>{profile.transition}<br />작은 예고가 마음의 다리가 되어줘요.</p></article>
   <article className="survival"><span style={{ backgroundColor: tapeColor }}>부모의 생존 한마디</span><blockquote>“{profile.survival}”</blockquote></article>
-  </div></section>; }
+  </div><button className={`understand-button ${understood ? "selected" : ""}`} type="button" aria-pressed={understood} onClick={() => setUnderstood((value) => !value)}>{understood ? "아, 그래서 그랬구나 ✓" : "오늘은 이렇게 이해해볼게요"}</button></section>; }
 
 function TodayPanel({ report }: { report: ReportResult }) {
   const profile = animalProfiles[report.character.animalName];
+  const [savedMission, setSavedMission] = useState(false);
   const now = new Date();
   const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(now);
   const messages = ["마음이 먼저 움직일 때까지 한 박자 기다려주면 좋은 날이에요.", "작은 선택권 하나가 아이의 자신감을 크게 깨워주는 날이에요.", "익숙한 놀이에 새로운 규칙 하나를 더하면 신이 나는 날이에요.", "말보다 몸을 먼저 움직이면 마음도 술술 따라오는 날이에요.", "시작보다 마무리를 함께 축하해주면 좋은 날이에요.", "천천히 순서를 정할수록 아이의 마음이 가벼워지는 날이에요.", "잘하려는 마음보다 재미있는 마음을 응원해주면 좋은 날이에요."];
@@ -243,7 +245,7 @@ function TodayPanel({ report }: { report: ReportResult }) {
   const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
   const todayColor = colors[dayNumber % colors.length];
   return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
-  <article className="mission"><span>오늘의 작전</span><h4>{profile.mission}</h4><p>{profile.missionBody}</p><b>“{profile.survival}”</b></article>
+  <article className={`mission ${savedMission ? "is-saved" : ""}`}><span>오늘의 작전</span><h4>{profile.mission}</h4><p>{profile.missionBody}</p><b>“{profile.survival}”</b><button className="mission-save" type="button" aria-pressed={savedMission} onClick={() => setSavedMission((value) => !value)}>{savedMission ? "오늘 작전으로 찜했어요 ♥" : "오늘 이 작전 해볼래요"}</button></article>
   <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: todayColor.hex }} aria-hidden="true" /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
   <article><span>오늘의 찰떡놀이</span><h4>{profile.play}</h4><p className="play-reason">{profile.playReason}</p><p>{profile.playBody}</p></article>
   <article><span>잠들기 전 질문해볼까요?</span><h4>“{profile.bedtime}”</h4><p className="prompt-reason">오늘 {report.nickname}의 마음이 움직인 순간을 편안하게 돌아보는 질문이에요.</p></article>
