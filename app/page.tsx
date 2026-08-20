@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
 import { animalProfiles } from "../lib/animal-profiles";
@@ -163,7 +164,7 @@ export default function Home() {
           <div className="animal-mystery">
             <p>우리 아이 마음속에는,<br />어떤 꼬마동물이 살고 있을까요?</p>
             <div className="mystery-stage" key={mysteryAnimalIndex} aria-hidden="true">
-              <img src={animals[mysteryAnimalIndex].image} alt="" />
+              <Image src={animals[mysteryAnimalIndex].image} alt="" width={256} height={256} sizes="(max-width: 600px) 125px, 180px" />
               <span>?</span>
             </div>
           </div>
@@ -183,7 +184,7 @@ export default function Home() {
         </form>
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
-          <div className="result-art"><img src={result.animal.image} alt={`${result.animal.alias} ${result.animal.name} 캐릭터`} /></div>
+          <div className="result-art"><Image src={result.animal.image} alt={`${result.animal.alias} ${result.animal.name} 캐릭터`} width={640} height={640} sizes="(max-width: 600px) 240px, 420px" /></div>
           <div className="result-copy">
             <p className="section-kicker">{result.nickname}의 마음속 꼬마동물</p>
             <h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3>
@@ -241,7 +242,7 @@ export default function Home() {
 function NaturePanel({ report }: { report: ReportResult }) {
   const profile = animalProfiles[report.character.animalName];
   return <section className="report-panel">
-  <div className="character-card"><div className="report-character-art"><img src={report.animal.image} alt={`${profile.alias} ${report.animal.name} 캐릭터`} /></div><div><p className="report-label">{report.nickname}의 ‘마음속 꼬마동물’</p><h3>{profile.alias}<br />{report.animal.name}</h3><p>{profile.intro}</p><span className="day-master-seal" style={{ backgroundColor: report.animal.sealColor }}>{report.character.dayMaster} · {hanjaReadings[report.character.dayMaster]}</span></div></div>
+  <div className="character-card"><div className="report-character-art"><Image src={report.animal.image} alt={`${profile.alias} ${report.animal.name} 캐릭터`} width={640} height={640} sizes="(max-width: 600px) 220px, 360px" /></div><div><p className="report-label">{report.nickname}의 ‘마음속 꼬마동물’</p><h3>{profile.alias}<br />{report.animal.name}</h3><p>{profile.intro}</p><span className="day-master-seal" style={{ backgroundColor: report.animal.sealColor }}>{report.character.dayMaster} · {hanjaReadings[report.character.dayMaster]}</span></div></div>
   <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>{profile.strengths[0]}</h4><p>{report.nickname}에게 자연스럽게 먼저 드러나는 힘이에요.</p></article><article><span>푹 빠질 때의 강점</span><h4>{profile.strengths[1]}</h4><p>좋아하는 순간 더욱 선명해지는 힘이에요.</p></article><article><span>기억해 주세요</span><h4>{profile.strengths[2]}</h4><p>재촉보다 관찰할 때 자기답게 자라나는 힘이에요.</p></article></div>
   </section>; }
 
