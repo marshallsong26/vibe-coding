@@ -49,6 +49,7 @@ export default function Home() {
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const [activeReport, setActiveReport] = useState("today-report");
   const startRef = useRef<HTMLElement>(null);
   const report = result ?? sampleReport;
@@ -72,11 +73,16 @@ export default function Home() {
     }, { rootMargin: "-25% 0px -55%", threshold: [0, .15, .35] });
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, [result]);
+  }, [result, showReport]);
 
   const openStart = () => {
     setStarted(true);
     window.setTimeout(() => startRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
+  };
+
+  const openSample = () => {
+    setShowReport(true);
+    window.setTimeout(() => document.querySelector("#sample")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -89,6 +95,7 @@ export default function Home() {
       const animal = animals.find((candidate) => candidate.name === character.animalName);
       if (!animal) throw new Error("꼬마동물 규칙을 확인해 주세요.");
       setResult({ nickname: String(data.get("nickname") || "아이"), animal, chart, character });
+      setShowReport(true);
       setFormError("");
     } catch (error) {
       setResult(null);
@@ -120,7 +127,7 @@ export default function Home() {
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
         <nav className="desktop-nav" aria-label="주요 메뉴">
-          <a href="#sample">샘플 리포트</a>
+          <button className="nav-link" type="button" onClick={openSample}>샘플 리포트</button>
           <button className="nav-cta" onClick={openStart}>우리 아이 알아보기</button>
         </nav>
         <div className="mobile-nav">
@@ -129,7 +136,7 @@ export default function Home() {
             <span /><span /><span />
           </button>
           {menuOpen && <nav className="mobile-menu" id="mobile-menu" aria-label="모바일 메뉴">
-            <a href="#sample" onClick={() => setMenuOpen(false)}><span>01</span> 미리보기</a>
+            <button type="button" onClick={() => { openSample(); setMenuOpen(false); }}><span>01</span> 미리보기</button>
             <button type="button" onClick={() => { openStart(); setMenuOpen(false); }}><span>02</span> 우리 아이 알아보기</button>
           </nav>}
         </div>
@@ -138,9 +145,9 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-paper">
           <p className="eyebrow">도무지 알 수 없는 내 아이를 이해하는 가장 재미있는 방법</p>
-          <h1>오늘 왜 그래?<br /><em className="rainbow-copy" aria-label="알고 보니 그럴 만했네."><span aria-hidden="true">알고</span> <span aria-hidden="true">보니</span> <span aria-hidden="true">그럴</span> <span aria-hidden="true">만했네</span><span aria-hidden="true">.</span></em></h1>
+          <h1>오늘 왜 그래?<br /><em className="rainbow-copy" aria-label="알고 보니 그럴 만했네."><span aria-hidden="true">알고 보니</span> <span className="rainbow-letters" aria-hidden="true"><i>그</i><i>럴</i><i>만</i><i>했</i><i>네</i><i>.</i></span></em></h1>
           <p className="hero-copy">타고난 기질부터 오늘의 행동까지, 아이만의 이유를 발견하고 부모에게는 바로 써먹을 작은 작전을 건네요.</p>
-          <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><a className="secondary" href="#sample">샘플 먼저 보기</a></div>
+          <div className="hero-actions"><button className="primary" onClick={openStart}>내 아이 알아보기</button><button className="secondary" type="button" onClick={openSample}>샘플 먼저 보기</button></div>
           <p className="hero-footnote">생년월일과 태어난 시간을 입력하면 아이의 <span className="animal-word">마음속 꼬마동물</span>과 리포트를 만날 수 있어요.</p>
         </div>
       </section>
@@ -169,13 +176,13 @@ export default function Home() {
             <p>{result.nickname} 자신을 나타내는 중심 글자는 <b>{result.character.dayMaster}({hanjaReadings[result.character.dayMaster]})</b>이에요.<br />‘{result.character.basis}’을 오늘왜그래에서는 {result.animal.name}로 표현했어요.</p>
             <p className="character-disclaimer">꼬마동물은 사주에 원래 존재하는 분류가 아니라, 아이의 기질을 친근하게 이해하도록 만든 오늘왜그래만의 표현이에요.</p>
             <details className="calculation-note"><summary>이 결과는 어떻게 나왔나요?</summary><p>양력 생년월일과 출생시간을 규칙 기반 만세력으로 계산했어요.<br />한국 표준시 · 절입 기준 · 0시 일주 변경 기준을 사용합니다.</p></details>
-            <div className="result-actions"><a href="#sample">샘플 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div>
+            <div className="result-actions"><a href="#sample">아이 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div>
             <small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}
           </div>
         </article>}
       </section>}
 
-      <section className="sample" id="sample">
+      {showReport && <section className="sample" id="sample">
         <div className="sample-paper">
           <div className="section-heading"><p className="section-kicker">{result ? "MY LITTLE REPORT" : "SAMPLE REPORT"}</p><h2>{report.nickname}는 오늘 왜 그럴까?</h2><p>{formatBirth(report)}{result ? "" : " · 샘플 결과"}</p></div>
           <div className="report-shell">
@@ -187,7 +194,7 @@ export default function Home() {
             <div className="report-flow"><div className="report-chapter stage-today" id="today-report"><TodayPanel report={report} /></div><div className="report-divider stage-nature"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div className="report-chapter stage-nature" id="nature-report"><NaturePanel report={report} /></div><div className="report-divider stage-reason"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div className="report-chapter stage-reason" id="reason-report"><ReasonPanel report={report} /></div></div>
           </div>
         </div>
-      </section>
+      </section>}
 
       <section className="promise"><p className="section-kicker">OUR PROMISE</p><h2>아이를 정해진 운명에 가두지 않아요.</h2><p>오늘왜그래는 명리학을 아이를 이해하는 하나의 문화적 관점으로 사용합니다.<br />성격·진로·건강을 단정하지 않고, 부모의 실제 관찰과 아이의 성장 가능성을 가장 중요하게 생각해요.</p></section>
       <footer>
