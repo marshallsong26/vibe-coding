@@ -49,6 +49,7 @@ export default function Home() {
   const [shareNotice, setShareNotice] = useState("");
   const [formError, setFormError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeReport, setActiveReport] = useState("today-report");
   const startRef = useRef<HTMLElement>(null);
   const report = result ?? sampleReport;
 
@@ -60,6 +61,18 @@ export default function Home() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
+
+  useEffect(() => {
+    const sections = ["today-report", "nature-report", "reason-report"]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveReport(visible.target.id);
+    }, { rootMargin: "-25% 0px -55%", threshold: [0, .15, .35] });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [result]);
 
   const openStart = () => {
     setStarted(true);
@@ -135,11 +148,11 @@ export default function Home() {
 
       {started && <section className="start-panel" ref={startRef} aria-label="아이 정보 입력">
         <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p>입력한 정보는 저장하지 않아요.<br />계산된 원국에 맞춰 아이만의 리포트가 바로 바뀌어요.</p></div>
-        <form onSubmit={handleSubmit}>
-          <label>아이 애칭<input name="nickname" defaultValue="별이" aria-label="아이 애칭" required /></label>
-          <label>양력 생년월일<input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
-          <label>태어난 시간<input name="birthTime" type="time" defaultValue="11:00" aria-label="태어난 시간" required /></label>
-          <label>출생 도시<input name="birthCity" defaultValue="서울" aria-label="출생 도시" required /></label>
+        <form className="birth-form" onSubmit={handleSubmit}>
+          <label className="form-field"><span><b>01</b> 아이 애칭</span><input name="nickname" defaultValue="별이" aria-label="아이 애칭" placeholder="예: 별이" required /></label>
+          <label className="form-field"><span><b>02</b> 양력 생년월일</span><input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
+          <label className="form-field"><span><b>03</b> 태어난 시간</span><input name="birthTime" type="time" defaultValue="11:00" aria-label="태어난 시간" required /></label>
+          <label className="form-field"><span><b>04</b> 출생 도시</span><input name="birthCity" defaultValue="서울" aria-label="출생 도시" placeholder="예: 서울" required /></label>
           <button className="primary" type="submit">마음속 꼬마동물 누구?</button>
         </form>
         {formError && <p className="form-notice" role="status">{formError}</p>}
@@ -176,8 +189,12 @@ export default function Home() {
         <div className="sample-paper">
           <div className="section-heading"><p className="section-kicker">{result ? "MY LITTLE REPORT" : "SAMPLE REPORT"}</p><h2>{report.nickname}는 오늘 왜 그럴까?</h2><p>{formatBirth(report)}{result ? "" : " · 샘플 결과"}</p></div>
           <div className="report-shell">
-            <nav className="report-index" aria-label="샘플 리포트 차례"><a href="#today-report">01 오늘왜그래</a><a href="#nature-report">02 원래왜그래</a><a href="#reason-report">03 그래서그랬구나</a></nav>
-            <div className="report-flow"><div id="today-report"><TodayPanel report={report} /></div><div className="report-divider"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div id="nature-report"><NaturePanel report={report} /></div><div className="report-divider"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div id="reason-report"><ReasonPanel report={report} /></div></div>
+            <nav className="report-index" aria-label="리포트 진행 단계">
+              <a className="stage-today" href="#today-report" aria-current={activeReport === "today-report" ? "step" : undefined}><b>01</b><span>오늘왜그래</span></a>
+              <a className="stage-nature" href="#nature-report" aria-current={activeReport === "nature-report" ? "step" : undefined}><b>02</b><span>원래왜그래</span></a>
+              <a className="stage-reason" href="#reason-report" aria-current={activeReport === "reason-report" ? "step" : undefined}><b>03</b><span>그래서그랬구나</span></a>
+            </nav>
+            <div className="report-flow"><div className="report-chapter stage-today" id="today-report"><TodayPanel report={report} /></div><div className="report-divider stage-nature"><span>02</span><p>오늘을 봤다면, 타고난 마음도 들여다봐요</p></div><div className="report-chapter stage-nature" id="nature-report"><NaturePanel report={report} /></div><div className="report-divider stage-reason"><span>03</span><p>행동에는 아이만의 이유가 있어요</p></div><div className="report-chapter stage-reason" id="reason-report"><ReasonPanel report={report} /></div></div>
           </div>
         </div>
       </section>
