@@ -161,3 +161,8 @@ body{background-color:#f8eadc;background-image:linear-gradient(90deg,transparent
 .animal-result .result-art{width:220px;height:220px;margin:0 auto;overflow:visible;background:color-mix(in srgb,var(--stage-today) 14%,var(--paper));border-radius:46%}
 .animal-result .result-art img{display:block;width:auto!important;height:auto!important;max-width:84%!important;max-height:84%!important;object-fit:scale-down!important;object-position:center!important}
 @media(max-width:760px){.animal-result .result-art{width:190px;height:170px}.animal-result .result-art img{max-width:78%!important;max-height:78%!important}}
+
+/* Playful hero lettering and brighter result CTA */
+.hero h1 .rainbow-copy{display:inline-block;color:inherit}.rainbow-copy span{display:inline-block;text-shadow:0 3px 0 rgba(74,46,27,.1)}.rainbow-copy span:nth-child(1){color:#ff4514;transform:rotate(-2deg)}.rainbow-copy span:nth-child(2){color:#0076bd;transform:rotate(1deg)}.rainbow-copy span:nth-child(3){color:#ff3f91;transform:rotate(-1deg)}.rainbow-copy span:nth-child(4){color:#1d963f;transform:rotate(1.5deg)}.rainbow-copy span:nth-child(5){color:#ffc400;transform:rotate(-4deg)}
+.birth-form .primary{border-radius:999px;background:#ffc400;color:#4a2e1b;box-shadow:0 10px 22px rgba(163,102,55,.25),0 3px 0 #eaa900;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}.birth-form .primary:hover{background:#ffd12f;transform:translateY(-2px);box-shadow:0 13px 26px rgba(163,102,55,.25),0 4px 0 #eaa900}.birth-form .primary:active{transform:translateY(1px);box-shadow:0 6px 13px rgba(163,102,55,.2),0 2px 0 #eaa900}
+@media(max-width:760px){.rainbow-copy span{margin-inline:-.01em}.birth-form .primary{min-height:54px}}
