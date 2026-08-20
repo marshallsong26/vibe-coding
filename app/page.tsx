@@ -6,18 +6,18 @@ import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-r
 import { animalProfiles } from "../lib/animal-profiles";
 
 const animals = [
-  { name: "카피바라", alias: animalProfiles.카피바라.alias, image: "/characters/capybara.png", sealColor: "#A36637B3" },
-  { name: "호랑이", alias: animalProfiles.호랑이.alias, image: "/characters/tiger.png", sealColor: "#EE5426B3" },
-  { name: "다람쥐", alias: animalProfiles.다람쥐.alias, image: "/characters/squirrel.png", sealColor: "#D99A09B3" },
-  { name: "아기 여우", alias: animalProfiles["아기 여우"].alias, image: "/characters/fox.png", sealColor: "#F06A9DB3" },
-  { name: "수달", alias: animalProfiles.수달.alias, image: "/characters/otter.png", sealColor: "#368F8BB3" },
-  { name: "레서판다", alias: animalProfiles.레서판다.alias, image: "/characters/red-panda.png", sealColor: "#8E3D2CB3" },
-  { name: "토끼", alias: animalProfiles.토끼.alias, emoji: "🐰", sealColor: "#F798BDB3" },
-  { name: "쿼카", alias: animalProfiles.쿼카.alias, emoji: "🐹", sealColor: "#FFC038B3" },
-  { name: "펭귄", alias: animalProfiles.펭귄.alias, emoji: "🐧", sealColor: "#387CAAB3" },
-  { name: "고슴도치", alias: animalProfiles.고슴도치.alias, emoji: "🦔", sealColor: "#A36637B3" },
-  { name: "미어캣", alias: animalProfiles.미어캣.alias, emoji: "🦫", sealColor: "#D99A09B3" },
-  { name: "고양이", alias: animalProfiles.고양이.alias, emoji: "🐈", sealColor: "#8E6AAEB3" },
+  { name: "카피바라", alias: animalProfiles.카피바라.alias, image: "/characters/capybara-v3.png", sealColor: "#A36637B3" },
+  { name: "호랑이", alias: animalProfiles.호랑이.alias, image: "/characters/tiger-v3.png", sealColor: "#EE5426B3" },
+  { name: "다람쥐", alias: animalProfiles.다람쥐.alias, image: "/characters/squirrel-v3.png", sealColor: "#D99A09B3" },
+  { name: "아기 여우", alias: animalProfiles["아기 여우"].alias, image: "/characters/fox-v3.png", sealColor: "#F06A9DB3" },
+  { name: "수달", alias: animalProfiles.수달.alias, image: "/characters/otter-v3.png", sealColor: "#368F8BB3" },
+  { name: "레서판다", alias: animalProfiles.레서판다.alias, image: "/characters/red-panda-v3.png", sealColor: "#8E3D2CB3" },
+  { name: "토끼", alias: animalProfiles.토끼.alias, image: "/characters/rabbit-v3.png", sealColor: "#F798BDB3" },
+  { name: "쿼카", alias: animalProfiles.쿼카.alias, image: "/characters/quokka-v3.png", sealColor: "#FFC038B3" },
+  { name: "펭귄", alias: animalProfiles.펭귄.alias, image: "/characters/penguin-v3.png", sealColor: "#387CAAB3" },
+  { name: "고슴도치", alias: animalProfiles.고슴도치.alias, image: "/characters/hedgehog-v3.png", sealColor: "#A36637B3" },
+  { name: "미어캣", alias: animalProfiles.미어캣.alias, image: "/characters/meerkat-v3.png", sealColor: "#D99A09B3" },
+  { name: "고양이", alias: animalProfiles.고양이.alias, image: "/characters/cat-v3.png", sealColor: "#8E6AAEB3" },
 ];
 
 type ReportResult = { nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult };
@@ -123,7 +123,7 @@ export default function Home() {
         </form>
         {formError && <p className="form-notice" role="status">{formError}</p>}
         {result && <article className="animal-result" id="animal-result" aria-live="polite">
-          <div className="result-art">{"image" in result.animal ? <img src={result.animal.image} alt={`${result.animal.name} 캐릭터`} /> : <span className="animal-emoji" role="img" aria-label={`${result.animal.name} 캐릭터`}>{result.animal.emoji}</span>}</div>
+          <div className="result-art"><img src={result.animal.image} alt={`${result.animal.alias} ${result.animal.name} 캐릭터`} /></div>
           <div className="result-copy">
             <p className="section-kicker">{result.nickname}의 마음속 꼬마동물</p>
             <h3>{result.nickname}는<br /><mark>{result.animal.alias} {result.animal.name}</mark></h3>
@@ -186,7 +186,7 @@ export default function Home() {
 function NaturePanel({ report }: { report: ReportResult }) {
   const profile = animalProfiles[report.character.animalName];
   return <section className="report-panel">
-  <div className="character-card"><div className="character-face" style={{ backgroundColor: report.animal.sealColor }} aria-hidden="true"><span>{report.character.dayMaster}</span></div><div><p className="report-label">{report.nickname}의 ‘마음속 꼬마동물’</p><h3>{profile.alias}<br />{report.animal.name}</h3><p>{profile.intro}</p></div></div>
+  <div className="character-card"><div className="report-character-art"><img src={report.animal.image} alt={`${profile.alias} ${report.animal.name} 캐릭터`} /></div><div><p className="report-label">{report.nickname}의 ‘마음속 꼬마동물’</p><h3>{profile.alias}<br />{report.animal.name}</h3><p>{profile.intro}</p><span className="day-master-seal" style={{ backgroundColor: report.animal.sealColor }}>{report.character.dayMaster} · {hanjaReadings[report.character.dayMaster]}</span></div></div>
   <div className="card-grid three"><article><span>먼저 보이는 강점</span><h4>{profile.strengths[0]}</h4><p>{report.nickname}에게 자연스럽게 먼저 드러나는 힘이에요.</p></article><article><span>푹 빠질 때의 강점</span><h4>{profile.strengths[1]}</h4><p>좋아하는 순간 더욱 선명해지는 힘이에요.</p></article><article><span>기억해 주세요</span><h4>{profile.strengths[2]}</h4><p>재촉보다 관찰할 때 자기답게 자라나는 힘이에요.</p></article></div>
   </section>; }
 
