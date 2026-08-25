@@ -5,6 +5,7 @@ import Image from "next/image";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
 import { animalProfiles } from "../lib/animal-profiles";
+import { getDailyGuidance } from "../lib/daily-guidance";
 
 const animals = [
   { name: "카피바라", alias: animalProfiles.카피바라.alias, image: "/characters/capybara-v3.png", sealColor: "#A36637B3" },
@@ -260,21 +261,13 @@ function ReasonPanel({ report }: { report: ReportResult }) {
 function TodayPanel({ report }: { report: ReportResult }) {
   const profile = animalProfiles[report.character.animalName];
   const [savedMission, setSavedMission] = useState(false);
-  const now = new Date();
-  const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(now);
-  const messages = ["마음이 먼저 움직일 때까지 한 박자 기다려주면 좋은 날이에요.", "작은 선택권 하나가 아이의 자신감을 크게 깨워주는 날이에요.", "익숙한 놀이에 새로운 규칙 하나를 더하면 신이 나는 날이에요.", "말보다 몸을 먼저 움직이면 마음도 술술 따라오는 날이에요.", "시작보다 마무리를 함께 축하해주면 좋은 날이에요.", "천천히 순서를 정할수록 아이의 마음이 가벼워지는 날이에요.", "잘하려는 마음보다 재미있는 마음을 응원해주면 좋은 날이에요."];
-  const colors = [
-    { name: "새싹 연두", hex: "#9EC244", play: "집 안에서 연두색 물건을 세 개 찾아보세요." },
-    { name: "햇살 노랑", hex: "#FFC038", play: "노란 물건을 찾아 오늘의 햇살 이름을 붙여보세요." },
-    { name: "구름 파랑", hex: "#6CBCE8", play: "파란색을 찾아 가장 시원한 파랑을 골라보세요." },
-    { name: "복숭아 분홍", hex: "#F798BD", play: "분홍색 물건 하나를 골라 다정한 별명을 붙여보세요." },
-    { name: "씩씩한 주황", hex: "#EE5426", play: "주황색을 발견할 때마다 힘나는 동작을 하나 해보세요." },
-  ];
-  const dayNumber = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
-  const todayColor = colors[dayNumber % colors.length];
-  return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{messages[now.getDay()]}</p></div><div className="daily-grid">
+  const guidance = getDailyGuidance(report.chart, report.character.animalName, {
+    title: profile.play, reason: profile.playReason, body: profile.playBody,
+  });
+  const today = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short", timeZone: "Asia/Seoul" }).format(new Date(`${guidance.dateKey}T12:00:00+09:00`));
+  return <section className="report-panel"><p className="report-label">오늘 아이에게 딱 맞는 하루 힌트</p><h3>오늘왜그래</h3><div className="today-status"><b>{today}</b><p>{guidance.status}</p><small>{report.character.dayMaster}{report.chart.pillars.day.branch} 일주와 오늘의 {guidance.todayPillar.stem}{guidance.todayPillar.branch} 일진을 함께 봤어요.</small></div><div className="daily-grid">
   <article className={`mission ${savedMission ? "is-saved" : ""}`}><span>오늘의 작전</span><h4>{profile.mission}</h4><p>{profile.missionBody}</p><b>“{profile.survival}”</b><button className="mission-save" type="button" aria-pressed={savedMission} onClick={() => setSavedMission((value) => !value)}>{savedMission ? "오늘 작전으로 찜했어요 ♥" : "오늘 이 작전 해볼래요"}</button></article>
-  <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: todayColor.hex }} aria-hidden="true" /><h4>{todayColor.name}</h4><p>{todayColor.play}</p></article>
-  <article><span>오늘의 찰떡놀이</span><h4>{profile.play}</h4><p className="play-reason">{profile.playReason}</p><p>{profile.playBody}</p></article>
+  <article className="color-card"><span>오늘의 짝꿍색</span><div className="color-dot" style={{ color: guidance.color.hex }} aria-hidden="true" /><h4>{guidance.color.name}</h4><p>{guidance.color.activity}</p><small>아이의 일주와 오늘 일진을 조합한 오행 색 놀이예요.</small></article>
+  <article><span>오늘의 찰떡놀이</span><h4>{guidance.play.title}</h4><p className="play-reason">{guidance.play.reason}</p><p>{guidance.play.body}</p></article>
   <article><span>잠들기 전 질문해볼까요?</span><h4>“{profile.bedtime}”</h4><p className="prompt-reason">오늘 {report.nickname}의 마음이 움직인 순간을 편안하게 돌아보는 질문이에요.</p></article>
   </div></section>; }
