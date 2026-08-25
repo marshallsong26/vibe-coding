@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
   if (!animal) return {};
   const title = `마음속에는 ‘${animal.alias} ${animal.name}’ 친구가 살고 있대요!`;
   const description = "우리 아이 마음속에는 어떤 꼬마동물이 살고 있을까요?";
+  const shareImage = `/share-cards/${animal.slug}.png`;
   return {
     metadataBase: new URL("https://littlewhytoday.vercel.app"),
     title: `${title} | 오늘왜그래 ㅎㅎ`,
@@ -27,7 +28,13 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
       url: `/share/${animal.slug}`,
       siteName: "오늘왜그래 ㅎㅎ",
       type: "website",
-      images: [{ url: animal.image, width: 640, height: 640, alt: `${animal.alias} ${animal.name} 캐릭터` }],
+      images: [{ url: shareImage, width: 1200, height: 630, alt: `${animal.alias} ${animal.name} 캐릭터` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [shareImage],
     },
   };
 }

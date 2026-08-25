@@ -122,7 +122,7 @@ export default function Home() {
 
   const getShareContent = () => {
     if (!result) return null;
-    const url = `${window.location.origin}/share/${result.animal.slug}`;
+    const url = `${window.location.origin}/share/${result.animal.slug}?card=2`;
     return {
       url,
       title: `${result.nickname}의 마음속에는 누가 살고 있을까?`,

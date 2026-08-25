@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "generate:share-cards": "node scripts/generate-share-cards.mjs",
     "start": "next start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "test:manseryeok": "node --experimental-strip-types --test tests/manseryeok.test.mjs tests/daily-guidance.test.mjs",
@@ -30,6 +31,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.4.0",
+    "sharp": "^0.35.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3"
   },
