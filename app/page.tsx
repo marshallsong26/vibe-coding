@@ -2,27 +2,37 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Script from "next/script";
 import { calculateManseryeok, normalizeBirthInput, type ManseryeokResult } from "../lib/manseryeok";
 import { selectLittleAnimal, type CharacterRuleResult } from "../lib/character-rules";
 import { animalProfiles } from "../lib/animal-profiles";
 import { getDailyGuidance } from "../lib/daily-guidance";
+import { animals, type Animal } from "../lib/animals";
 
-const animals = [
-  { name: "카피바라", alias: animalProfiles.카피바라.alias, image: "/characters/capybara-v3.png", sealColor: "#A36637B3" },
-  { name: "호랑이", alias: animalProfiles.호랑이.alias, image: "/characters/tiger-v3.png", sealColor: "#EE5426B3" },
-  { name: "다람쥐", alias: animalProfiles.다람쥐.alias, image: "/characters/squirrel-v3.png", sealColor: "#D99A09B3" },
-  { name: "아기 여우", alias: animalProfiles["아기 여우"].alias, image: "/characters/fox-v3.png", sealColor: "#F06A9DB3" },
-  { name: "수달", alias: animalProfiles.수달.alias, image: "/characters/otter-v3.png", sealColor: "#368F8BB3" },
-  { name: "레서판다", alias: animalProfiles.레서판다.alias, image: "/characters/red-panda-v3.png", sealColor: "#8E3D2CB3" },
-  { name: "토끼", alias: animalProfiles.토끼.alias, image: "/characters/rabbit-v3.png", sealColor: "#F798BDB3" },
-  { name: "쿼카", alias: animalProfiles.쿼카.alias, image: "/characters/quokka-v3.png", sealColor: "#FFC038B3" },
-  { name: "펭귄", alias: animalProfiles.펭귄.alias, image: "/characters/penguin-v3.png", sealColor: "#387CAAB3" },
-  { name: "고슴도치", alias: animalProfiles.고슴도치.alias, image: "/characters/hedgehog-v3.png", sealColor: "#A36637B3" },
-  { name: "미어캣", alias: animalProfiles.미어캣.alias, image: "/characters/meerkat-v3.png", sealColor: "#D99A09B3" },
-  { name: "고양이", alias: animalProfiles.고양이.alias, image: "/characters/cat-v3.png", sealColor: "#8E6AAEB3" },
-];
+type ReportResult = { nickname: string; animal: Animal; chart: ManseryeokResult; character: CharacterRuleResult };
 
-type ReportResult = { nickname: string; animal: typeof animals[number]; chart: ManseryeokResult; character: CharacterRuleResult };
+declare global {
+  interface Window {
+    Kakao?: {
+      init: (key: string) => void;
+      isInitialized: () => boolean;
+      Share: {
+        sendDefault: (options: {
+          objectType: "feed";
+          content: {
+            title: string;
+            description: string;
+            imageUrl: string;
+            imageWidth: number;
+            imageHeight: number;
+            link: { mobileWebUrl: string; webUrl: string };
+          };
+          buttons: Array<{ title: string; link: { mobileWebUrl: string; webUrl: string } }>;
+        }) => void;
+      };
+    };
+  }
+}
 
 const hanjaReadings: Record<string, string> = {
   甲: "갑", 乙: "을", 丙: "병", 丁: "정", 戊: "무", 己: "기", 庚: "경", 辛: "신", 壬: "임", 癸: "계",
@@ -46,6 +56,7 @@ function formatBirth(result: ReportResult) {
 }
 
 export default function Home() {
+  const kakaoJavaScriptKey = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
   const [started, setStarted] = useState(false);
   const [result, setResult] = useState<ReportResult | null>(null);
   const [shareNotice, setShareNotice] = useState("");
@@ -120,25 +131,70 @@ export default function Home() {
     window.setTimeout(() => document.querySelector("#animal-result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
   };
 
-  const handleShare = async () => {
+  const getShareContent = () => {
+    if (!result) return null;
+    const url = `${window.location.origin}/share/${result.animal.slug}`;
+    return {
+      url,
+      title: `${result.nickname}의 마음속에는 누가 살고 있을까?`,
+      text: `‘${result.animal.alias} ${result.animal.name}’ 친구가 살고 있대요! 내 아이의 꼬마동물도 만나보세요.`,
+      imageUrl: `${window.location.origin}${result.animal.image}`,
+    };
+  };
+
+  const handleShare = async (fallbackFromKakao = false) => {
     if (!result) return;
-    const url = `${window.location.origin}${window.location.pathname}#sample`;
-    const text = `${result.nickname}의 마음속 꼬마동물은 ‘${result.animal.alias} ${result.animal.name}’! 오늘왜그래 ㅎㅎ에서 확인해보세요.`;
+    const share = getShareContent();
+    if (!share) return;
     try {
       if (navigator.share) {
-        await navigator.share({ title: `${result.nickname}의 마음속 꼬마동물`, text, url });
-        setShareNotice("공유할 곳을 선택했어요.");
+        await navigator.share({ title: share.title, text: share.text, url: share.url });
+        setShareNotice(fallbackFromKakao ? "공유할 앱에서 카카오톡을 선택해 주세요." : "공유할 곳을 선택했어요.");
       } else {
-        await navigator.clipboard.writeText(`${text}\n${url}`);
-        setShareNotice("공유 문구와 링크를 복사했어요.");
+        await navigator.clipboard.writeText(`${share.title}\n${share.text}\n${share.url}`);
+        setShareNotice("공유 문구와 링크를 복사했어요. 카카오톡에 붙여 넣어주세요.");
       }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
       setShareNotice("공유하지 못했어요. 잠시 후 다시 눌러주세요.");
     }
   };
+
+  const initializeKakao = () => {
+    if (!kakaoJavaScriptKey || !window.Kakao || window.Kakao.isInitialized()) return;
+    window.Kakao.init(kakaoJavaScriptKey);
+  };
+
+  const handleKakaoShare = async () => {
+    const share = getShareContent();
+    if (!share) return;
+    initializeKakao();
+    if (!kakaoJavaScriptKey || !window.Kakao?.isInitialized()) {
+      await handleShare(true);
+      return;
+    }
+    try {
+      const link = { mobileWebUrl: share.url, webUrl: share.url };
+      window.Kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: share.title,
+          description: share.text,
+          imageUrl: share.imageUrl,
+          imageWidth: 640,
+          imageHeight: 640,
+          link,
+        },
+        buttons: [{ title: "내 아이 꼬마동물 만나기", link }],
+      });
+      setShareNotice("카카오톡에서 공유할 친구를 골라주세요.");
+    } catch {
+      setShareNotice("카카오톡 공유를 열지 못했어요. 다른 방법으로 공유해 주세요.");
+    }
+  };
   return (
     <main className="theme-earth">
+      {kakaoJavaScriptKey && <Script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.2/kakao.min.js" strategy="afterInteractive" integrity="sha384-zt/G7/KfaRQ9dT/QIkS0ujMtzouJqzuSJcXVQu50x0rl/+mD1dc70AeOejVbMD9E" crossOrigin="anonymous" onReady={initializeKakao} />}
       <header className="topbar">
         <a className="logo" href="#top" aria-label="오늘왜그래 홈">오늘왜그래 <span>ㅎㅎ</span></a>
         <nav className="desktop-nav" aria-label="주요 메뉴">
@@ -198,8 +254,8 @@ export default function Home() {
             <p>{result.nickname} 자신을 나타내는 중심 글자는 <b>{result.character.dayMaster}({hanjaReadings[result.character.dayMaster]})</b>이에요.<br />‘{result.character.basis}’을 오늘왜그래에서는 {result.animal.name}로 표현했어요.</p>
             <p className="character-disclaimer">꼬마동물은 사주에 원래 존재하는 분류가 아니라, 아이의 기질을 친근하게 이해하도록 만든 오늘왜그래만의 표현이에요.</p>
             <details className="calculation-note"><summary>이 결과는 어떻게 나왔나요?</summary><p>양력 생년월일과 출생시간을 규칙 기반 만세력으로 계산했어요.<br />한국 표준시 · 절입 기준 · 0시 일주 변경 기준을 사용합니다.</p></details>
-            <div className="result-actions"><a href="#sample">아이 리포트 이어서 보기 ↓</a><button type="button" onClick={handleShare}>결과 공유하기</button></div>
-            <small>생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}
+            <div className="result-actions"><a href="#sample">아이 리포트 이어서 보기 ↓</a><button className="kakao-share" type="button" onClick={handleKakaoShare}><span aria-hidden="true">💬</span> 카톡으로 공유하기</button><button className="more-share" type="button" onClick={() => handleShare()}>다른 방법으로 공유</button></div>
+            <small>공유 카드에는 애칭과 꼬마동물만 표시돼요.<br />생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}
           </div>
         </article>}
       </section>}
