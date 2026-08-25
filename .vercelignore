@@ -1,0 +1,11 @@
+.git
+.next
+.runtime
+.vercel/output
+.vinext
+dist
+node_modules
+outputs
+work
+coverage
+*.log
