@@ -5,7 +5,7 @@
 ## 운영 설정
 
 1. 카카오디벨로퍼스에서 애플리케이션을 만들거나 기존 앱을 선택한다.
-2. JavaScript SDK 도메인과 제품 링크 관리의 웹 도메인에 `https://oneul-wae.vercel.app`을 등록한다.
+2. JavaScript SDK 도메인과 제품 링크 관리의 웹 도메인에 `https://littlewhytoday.vercel.app`을 등록한다.
 3. 앱의 JavaScript 키를 Vercel 환경 변수 `NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY`로 등록한다.
 4. Production 환경을 다시 배포한다.
 

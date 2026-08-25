@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: SharePageProps): Promise<Meta
   const title = `마음속에는 ‘${animal.alias} ${animal.name}’ 친구가 살고 있대요!`;
   const description = "우리 아이 마음속에는 어떤 꼬마동물이 살고 있을까요?";
   return {
-    metadataBase: new URL("https://oneul-wae.vercel.app"),
+    metadataBase: new URL("https://littlewhytoday.vercel.app"),
     title: `${title} | 오늘왜그래 ㅎㅎ`,
     description,
     openGraph: {
