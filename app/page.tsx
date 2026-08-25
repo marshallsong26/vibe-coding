@@ -17,18 +17,7 @@ declare global {
       init: (key: string) => void;
       isInitialized: () => boolean;
       Share: {
-        sendDefault: (options: {
-          objectType: "feed";
-          content: {
-            title: string;
-            description: string;
-            imageUrl: string;
-            imageWidth: number;
-            imageHeight: number;
-            link: { mobileWebUrl: string; webUrl: string };
-          };
-          buttons: Array<{ title: string; link: { mobileWebUrl: string; webUrl: string } }>;
-        }) => void;
+        sendScrap: (options: { requestUrl: string }) => void;
       };
     };
   }
@@ -138,7 +127,6 @@ export default function Home() {
       url,
       title: `${result.nickname}의 마음속에는 누가 살고 있을까?`,
       text: `‘${result.animal.alias} ${result.animal.name}’ 친구가 살고 있대요! 내 아이의 꼬마동물도 만나보세요.`,
-      imageUrl: `${window.location.origin}${result.animal.image}`,
     };
   };
 
@@ -174,19 +162,7 @@ export default function Home() {
       return;
     }
     try {
-      const link = { mobileWebUrl: share.url, webUrl: share.url };
-      window.Kakao.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: share.title,
-          description: share.text,
-          imageUrl: share.imageUrl,
-          imageWidth: 640,
-          imageHeight: 640,
-          link,
-        },
-        buttons: [{ title: "내 아이 꼬마동물 만나기", link }],
-      });
+      window.Kakao.Share.sendScrap({ requestUrl: share.url });
       setShareNotice("카카오톡에서 공유할 친구를 골라주세요.");
     } catch {
       setShareNotice("카카오톡 공유를 열지 못했어요. 다른 방법으로 공유해 주세요.");
