@@ -234,8 +234,8 @@ export default function Home() {
         <div><p className="section-kicker">MY LITTLE REPORT</p><h2>내 아이 알아보기</h2><p className="start-lead">오늘의 행동부터 타고난 마음까지,<br />세 장의 리포트로 차근차근 알아봐요.</p><small className="start-privacy">입력한 정보는 저장하지 않아요.</small></div>
         <form className="birth-form" onSubmit={handleSubmit}>
           <label className="form-field"><span><b>01</b> 아이 애칭</span><input name="nickname" defaultValue="별이" aria-label="아이 애칭" placeholder="예: 별이" required /></label>
-          <label className="form-field"><span><b>02</b> 양력 생년월일</span><input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
-          <label className="form-field"><span><b>03</b> 태어난 시간</span><input name="birthTime" type="time" defaultValue="11:00" aria-label="태어난 시간" required /></label>
+          <label className="form-field"><span><b>02</b> 양력 생년월일</span><span className="native-input-shell"><input name="birthDate" type="date" defaultValue="2025-01-01" aria-label="양력 생년월일" required /></span><small>현재는 양력 생일만 입력할 수 있어요.</small></label>
+          <label className="form-field"><span><b>03</b> 태어난 시간</span><span className="native-input-shell"><input name="birthTime" type="time" defaultValue="11:00" aria-label="태어난 시간" required /></span></label>
           <label className="form-field"><span><b>04</b> 출생 도시</span><input name="birthCity" defaultValue="서울" aria-label="출생 도시" placeholder="예: 서울" required /></label>
           <button className="primary" type="submit">마음속 꼬마동물 누구?</button>
         </form>
