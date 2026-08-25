@@ -254,7 +254,7 @@ export default function Home() {
             <p>{result.nickname} 자신을 나타내는 중심 글자는 <b>{result.character.dayMaster}({hanjaReadings[result.character.dayMaster]})</b>이에요.<br />‘{result.character.basis}’을 오늘왜그래에서는 {result.animal.name}로 표현했어요.</p>
             <p className="character-disclaimer">꼬마동물은 사주에 원래 존재하는 분류가 아니라, 아이의 기질을 친근하게 이해하도록 만든 오늘왜그래만의 표현이에요.</p>
             <details className="calculation-note"><summary>이 결과는 어떻게 나왔나요?</summary><p>양력 생년월일과 출생시간을 규칙 기반 만세력으로 계산했어요.<br />한국 표준시 · 절입 기준 · 0시 일주 변경 기준을 사용합니다.</p></details>
-            <div className="result-actions"><a href="#sample">아이 리포트 이어서 보기 ↓</a><button className="kakao-share" type="button" onClick={handleKakaoShare}><span aria-hidden="true">💬</span> 카톡으로 공유하기</button><button className="more-share" type="button" onClick={() => handleShare()}>다른 방법으로 공유</button></div>
+            <div className="result-actions"><a className="report-more" href="#sample">아이 리포트 이어서 보기 ↓</a><div className="share-buttons"><button className="kakao-share" type="button" onClick={handleKakaoShare}><span className="kakao-bubble" aria-hidden="true">••</span>카톡으로 공유</button><button className="more-share" type="button" onClick={() => handleShare()}><span aria-hidden="true">↗</span> 다른 방법</button></div></div>
             <small>공유 카드에는 애칭과 꼬마동물만 표시돼요.<br />생년월일·출생시간·출생 도시는 공유되지 않아요.</small>{shareNotice && <p className="share-notice" role="status">{shareNotice}</p>}
           </div>
         </article>}
